@@ -1,0 +1,39 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/relevance/index",
+			"style": {
+				"navigationBarTitleText": "巡逻车辆绑定"
+			}
+		},
+		{
+			"path": "pages/task-list/index",
+			"style": {
+				"navigationBarTitleText": "警情任务"
+			}
+		},
+		{
+			"path": "pages/task-detail/index",
+			"style": {
+				"navigationBarTitleText": "警情详情"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#F8F8F8"
+	},
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	}
+}
