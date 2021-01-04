@@ -11,14 +11,14 @@
 		<template>
 			<view :class="$style.driving">
 				<view>
-					<text :class="$style.mileage">284</text>km
+					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
 					<view>今日累计巡逻里程</view>
 				</view>
 				<view :class="$style.plate">渝·A0008<text>警</text></view>
 			</view>
 			<view :class="$style.task">
 				<view>
-					<text :class="$style.completed">284</text>起
+					<text :class="$style.completed">{{sourceData.totalHandleAlarm}}</text>起
 					<view>警情处置数</view>
 				</view>
 				<view :class="$style.state" busy>
@@ -31,11 +31,11 @@
 		<template>
 			<view :class="$style.generalize">
 				<view>
-					<text :class="$style.mileage">284</text>km
+					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
 					<view>今日累计巡逻里程</view>
 				</view>
 				<view>
-					<text :class="$style.completed">284</text>起
+					<text :class="$style.completed">{{sourceData.totalHandleAlarm}}</text>起
 					<view>警情处置数</view>
 				</view>
 			</view>
@@ -55,6 +55,9 @@
 	import InfoCardTaskDetail from "./InfoCardTaskDetail.vue";
 	export default{
 		name:"infoCard",
+		props:{
+			sourceData: Object
+		},
 		components: {
 			InfoCardTaskDetail
 		}
