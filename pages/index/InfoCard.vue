@@ -2,19 +2,19 @@
 	<view :class="$style.container">
 		<view :class="$style.user">
 			<view :class="$style.info">
-				<u-image width="64rpx" height="64rpx" shape="circle" src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
+				<u-image width="64rpx" height="64rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
 				<text :class="$style.name">周警官</text>
 			</view>
 			<text :class="$style.greeting">下午好，欢迎使用交巡警智能管理平台</text>
 		</view>
 		<!-- 执行任务中 -->
-		<template>
+		<template v-if="isBusy">
 			<view :class="$style.driving">
 				<view>
 					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
 					<view>今日累计巡逻里程</view>
 				</view>
-				<view :class="$style.plate">渝·A0008<text>警</text></view>
+				<view :class="$style.plate">渝·{{cardNumber}}<text>警</text></view>
 			</view>
 			<view :class="$style.task">
 				<view>
@@ -28,7 +28,7 @@
 			</view>
 		</template>
 		<!-- 空闲状态 -->
-		<template>
+		<template v-else>
 			<view :class="$style.generalize">
 				<view>
 					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
@@ -40,14 +40,17 @@
 				</view>
 			</view>
 			<view :class="$style.action">
-				<view :class="$style.relevance"><text :class="$style.icon"></text>绑定巡逻车辆</view>
+				<view :class="$style.relevance">
+					<text :class="$style.icon"></text>
+					{{cardNumber ? "解绑" : "绑定"}}巡逻车辆
+				</view>
 				<view :class="$style.state" Idle>
 					当前正在巡逻中
 					<text :class="$style.arrow"></text>
 				</view>
 			</view>
 		</template>
-		<InfoCardTaskDetail></InfoCardTaskDetail>
+		<InfoCardTaskDetail v-if="isBusy" :sourceData="sourceData.alarm"></InfoCardTaskDetail>
 	</view>
 </template>
 
@@ -60,14 +63,39 @@
 		},
 		components: {
 			InfoCardTaskDetail
+		},
+		computed:{
+			isBusy(){
+				let status = false;
+				const { alarm } = this.sourceData;
+				if (alarm && alarm.status === 3) {
+					status = true;
+				}
+				return status;
+			},
+			cardNumber(){
+				let number = 0;
+				const { bindCard } = this.sourceData;
+				if (Array.isArray(bindCard) && bindCard.length) {
+					const card = bindCard[0];
+					try{
+						number = card.slice(1, card.length - 1);
+					}catch{
+						number = 0
+					}
+				}
+				return number;
+			}
 		}
 	}
 </script>
 
 <style lang="scss" module>
 	.container{
-		
+		padding: 50rpx;
 		font-size: 24rpx;
+		border-radius: 32rpx 32rpx 0px 0px;
+		background-color: #2C2F3A;
 		color: #6C6F7B;
 	}
 	.user{

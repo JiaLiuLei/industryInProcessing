@@ -55,6 +55,7 @@
 	import StepNav from "./StepNav.vue";
 	import CardInfo from "./CardInfo.vue";
 	import AMap from "@/components/AMap.vue";
+	import { getTaskDetail } from "@/api/task";
 	export default {
 		name: "task-detail",
 		components: {
@@ -66,8 +67,17 @@
 			return {
 				activeIndex: 3,
 				sliderValue: 9,
-				upLoadaction: 'http://www.example.com/upload'
+				upLoadaction: 'http://www.example.com/upload',
+				pageData: {}
 			} 
+		},
+		async onLoad() {
+			try{
+				const reuslt = await getTaskDetail({jqId: 1});
+				this.pageData = result;
+			}catch(e){
+				this.pageData = {}
+			}
 		},
 		methods:{
 			handleSliderEnd() {

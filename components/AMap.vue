@@ -11,7 +11,7 @@
 <script>
 	export default {
 		props:{
-			targetPosition: null,
+			targetPosition: Array,
 			toolbar: Boolean
 		},
 		data() {
@@ -47,6 +47,7 @@
 				document.body.appendChild(script);
 			},
 			setPosition(map) {
+				if(!map) return;
 				const onComplete = result => {
 					const { position: {lat, lng} } = result;
 					this.coordinate = [lng, lat];
@@ -94,7 +95,7 @@
 			},
 			// 添加目标点
 			addTargetMarker(map, options) {
-				if(!options) return;
+				if(Array.isArray(options) || !options.length) return;
 				const marker =  new AMap.Marker({
 					content: "<div class='target-position'></div>",
 					position: options,
@@ -110,9 +111,10 @@
 		},
 		beforeDestroy() {
 			clearInterval(this.timer);
-			this.timer = null;
 			this.map.destroy();
 			uni.stopCompass();
+			this.map = null;
+			this.timer = null;
 		}
 	}
 </script>

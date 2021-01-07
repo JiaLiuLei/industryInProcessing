@@ -1,10 +1,31 @@
 <template>
-	<view :class="$style.container">
+	<view :class="$style.container" v-if="pageData">
 		<view :class="$style.map">
-			<AMap :targetPosition="[121.302412, 31.24755]" toolbar></AMap>
+			<AMap :targetPosition="targetPosition" toolbar></AMap>
 		</view>
 		<view :class="$style.detail">
-			<InfoCard :sourceData="info"></InfoCard>
+			<view :class="$style.nav">
+				<view :class="$style.item">
+					<u-icon name="list"></u-icon>
+					<navigator :class="$style.title" url="/pages/task-list/index" hover-class="none">
+						警情任务
+					</navigator>
+					<u-badge
+						size="mini"
+						:absolute="false"
+						v-if="taskTotal"
+						type="error"
+						:count="taskTotal">
+					</u-badge>
+				</view>
+				<view :class="$style.item">
+					<u-icon name="server-fill"></u-icon>
+					<navigator :class="$style.title" url="/pages/task-list/index" hover-class="none">
+						警情上报
+					</navigator>
+				</view>
+			</view>
+			<InfoCard :sourceData="pageData"></InfoCard>
 		</view>
 	</view>
 </template>
@@ -12,7 +33,8 @@
 <script>
 	import AMap from "@/components/AMap";
 	import InfoCard from "./InfoCard.vue";
-	import { getHomeInfo } from "@/api/public.js";
+	import { getHomeInfo } from "@/api/public";
+	import { getTask } from "@/api/task";
 	export default {
 		components: {
 			AMap,
@@ -20,14 +42,43 @@
 		},
 		data() {
 			return {
-				info: {}
+				pageData: null,
+				taskTotal: 0
 			}
 		},
-		async mounted() {
-			const res = await getHomeInfo();
-			this.info = res;
+		computed:{
+			targetPosition(){
+				let target = [];
+				try{
+					const { alarm: { lng, lat, status } } = this.pageData;
+					if(lng && lat && status === 3) {
+						target = [lng, lat];
+					}
+				}catch{
+					target = []
+				}
+				return target;
+			}
 		},
-		methods: {}
+		async onLoad() {
+			try{
+				const res = await getHomeInfo();
+				this.pageData = res;
+			}catch{
+				this.pageData = null;
+			}
+			this.getTaskList();
+		},
+		methods: {
+			async getTaskList() {
+				try{
+					const list = await getTask({status: 2});
+					this.taskTotal = list.length;
+				}catch{
+					this.taskTotal = 0
+				}
+			}
+		}
 	}
 </script>
 
@@ -37,7 +88,30 @@
 		display: flex;
 		flex-direction: column;
 	}
-
+	.nav{
+		display: flex;
+		.item{
+			flex: 1;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 25rpx 0;
+			.title{
+				margin: 0 10rpx;
+			}
+			&::after{
+				content: '';
+				position: absolute;
+				top: 50%;
+				width: 1rpx;
+				height: 30rpx;
+				background-color: #eee;
+				right: 0;
+				transform: translateY(-50%);
+			}
+		}
+	}
 	.map {
 		flex: 1;
 		position: relative;
@@ -48,9 +122,8 @@
 		flex-shrink: 0;
 		position: relative;
 		margin-top: -32rpx;
-		padding: 50rpx;
 		border-radius: 32rpx 32rpx 0px 0px;
-		background-color: #2C2F3A;
 		z-index: 2;
+		background-color: #fff;
 	}
 </style>

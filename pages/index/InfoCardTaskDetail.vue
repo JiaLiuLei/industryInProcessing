@@ -3,17 +3,25 @@
 		<view :class="$style.card">
 			<view :class="$style.title">
 				<view :class="$style.user">
-					<u-image width="48rpx" height="48rpx" shape="circle" src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
-					<text :class="$style.name">匿名报警</text>
+					<u-image width="48rpx" height="48rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
+					<text :class="$style.name">{{sourceData.alarmPersonName ? sourceData.alarmPersonName : "匿名报警"}}</text>
 				</view>
-				<view :class="$style.right">联系报警人<text :class="$style.arrow"></text></view>
+				<view :class="$style.right" @tap="handlePhoneCall(sourceData.alarmPersonPhone)">联系报警人<text :class="$style.arrow"></text></view>
 			</view>
 			<view :class="$style.content">
-				<view :class="$style.text">1</view>
+				<view :class="$style.text">{{sourceData.content}}</view>
 			</view>
 		</view>
-		<u-slider @click.native="handleSliderClick" v-model="sliderValue" min="11" max="94" inactive-color="#424758"
-		 active-color="#8FFF43" height="120" :use-slot="true" @end="handleSliderEnd">
+		<u-slider
+			@click.native="handleSliderClick"
+			v-model="sliderValue"
+			min="11"
+			max="94"
+			inactive-color="#424758"
+			active-color="#8FFF43"
+			height="120"
+			:use-slot="true"
+			@end="handleSliderEnd">
 			<view>
 				<view :class="$style.badge">
 					<view :class="$style.icon"></view>
@@ -26,6 +34,9 @@
 <script>
 	export default {
 		name: "infoCardTaskDetail",
+		props: {
+			sourceData: Object
+		},
 		data() {
 			return {
 				sliderValue: 11
@@ -41,6 +52,11 @@
 			},
 			handleSliderClick() {
 				this.sliderValue = 11;
+			},
+			handlePhoneCall(number){
+				uni.makePhoneCall({
+				    phoneNumber: number
+				});
 			}
 		}
 	}

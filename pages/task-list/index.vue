@@ -3,51 +3,61 @@
 		<view :class="$style.nav">
 			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="current" @change="handleNavChange"></u-subsection>
 		</view>
-		<!-- 处理 -->
+		<!-- 待处理 -->
 		<view :class="$style.item" v-show="!current">
-			<view :class="$style.card">
-				<view :class="$style.title">
-					<view :class="$style.user">
-						<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-defualt.png" shape="circle"></u-image>
-						匿名报警
+			<template v-if="unfinishedTasks.length">
+				<view :class="$style.card" v-for="item in unfinishedTasks" :key="item.id">
+					<view :class="$style.title">
+						<view :class="$style.user">
+							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
+						</view>
+						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+							联系报警人
+							<text :class="$style.arrow"></text>
+						</view>
 					</view>
-					<view :class="$style.relation">
-						联系报警人
-						<text :class="$style.arrow"></text>
+					<view :class="$style.content">
+						<view :class="$style.text">{{item.content}}</view>
 					</view>
+					<view :class="$style.action">立即处理警情</view>
 				</view>
-				<view :class="$style.content">
-					<view :class="$style.text">刚才红旗河沟立交自西向东路口发生擦刮纠纷</view>
-				</view>
-				<view :class="$style.action">立即处理警情</view>
-			</view>
+			</template>
+			<u-empty margin-top="100" v-else mode="search" text="没有待处理任务"></u-empty>
 		</view>
-		<!-- 回执 -->
+		<!-- 待回执 -->
 		<view :class="$style.item" v-show="current">
-			<view :class="$style.card">
-				<view :class="$style.title">
-					<view :class="$style.user">
-						<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-defualt.png" shape="circle"></u-image>
-						匿名报警
+			<template v-if="unReceiptTasks.length">
+				<view :class="$style.card" v-for="item in unReceiptTasks" :key="item.id">
+					<view :class="$style.title">
+						<view :class="$style.user">
+							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
+						</view>
+						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+							联系报警人
+							<text :class="$style.arrow"></text>
+						</view>
 					</view>
-					<view :class="$style.relation">
-						联系报警人
-						<text :class="$style.arrow"></text>
+					<view :class="$style.content">
+						<view :class="$style.text">{{item.content}}</view>
 					</view>
+					<view :class="$style.action">填写回执</view>
 				</view>
-				<view :class="$style.content">
-					<view :class="$style.text">刚才红旗河沟立交自西向东路口发生擦刮纠纷</view>
-				</view>
-				<view :class="$style.action">填写回执</view>
-			</view>
+			</template>
+			<u-empty margin-top="100" v-else mode="search" text="没有待回执任务"></u-empty>
 		</view>
 	</view>
 </template>
 
 <script>
+	import { getTask } from "@/api/task";
+	
 	export default {
 		data() {
 			return {
+				unfinishedTasks: [],
+				unReceiptTasks: [],
 				category: [
 					{
 						name: "待处理"
@@ -59,9 +69,35 @@
 				current: 0
 			}
 		},
+		onLoad(){
+			this.getTaskList(0);
+		},
 		methods: {
 			handleNavChange(index) {
 				this.current = index;
+				this.getTaskList(index);
+			},
+			async getTaskList(index) {
+				let status = 2;
+				let result = [];
+				if (index === 1) {
+					status = 0;
+				}
+				try{
+					result = await getTask({status});
+				}catch{
+					result = [];
+				}
+				if (index === 1) {
+					this.unReceiptTasks = result;
+				} else {
+					this.unfinishedTasks = result;
+				}
+			},
+			handlePhoneCall(number){
+				uni.makePhoneCall({
+				    phoneNumber: number
+				});
 			}
 		}
 	}

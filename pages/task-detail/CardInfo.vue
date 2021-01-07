@@ -2,7 +2,7 @@
 	<view :class="$style.container">
 		<view :class="$style.title">
 			<view :class="$style.user">
-				<u-image width="64rpx" height="64rpx" :class="$style.via" src="../../static/icon-via-defualt.png" shape="circle"></u-image>
+				<u-image width="64rpx" height="64rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
 				匿名报警
 			</view>
 			<view :class="$style.right">联系报警人<text :class="$style.arrow"></text></view>
