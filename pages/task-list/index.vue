@@ -4,9 +4,9 @@
 			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="current" @change="handleNavChange"></u-subsection>
 		</view>
 		<!-- 待处理 -->
-		<view :class="$style.item" v-show="!current">
-			<template v-if="unfinishedTasks.length">
-				<view :class="$style.card" v-for="item in unfinishedTasks" :key="item.id">
+		<view :class="$style.item" v-show="current === 0">
+			<template v-if="unconfirmedTask.length">
+				<view :class="$style.card" v-for="item in unconfirmedTask" :key="item.id">
 					<view :class="$style.title">
 						<view :class="$style.user">
 							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
@@ -20,15 +20,37 @@
 					<view :class="$style.content">
 						<view :class="$style.text">{{item.content}}</view>
 					</view>
-					<view :class="$style.action">立即处理警情</view>
+					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">立即处理警情</view>
 				</view>
 			</template>
-			<u-empty margin-top="100" v-else mode="search" text="没有待处理任务"></u-empty>
+			<u-empty margin-top="100" v-else mode="search" text="没有待处理的任务"></u-empty>
+		</view>
+		<!-- 处理中 -->
+		<view :class="$style.item" v-show="current === 1">
+			<template v-if="inProgressTask.length">
+				<view :class="$style.card" v-for="item in inProgressTask" :key="item.id">
+					<view :class="$style.title">
+						<view :class="$style.user">
+							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
+						</view>
+						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+							联系报警人
+							<text :class="$style.arrow"></text>
+						</view>
+					</view>
+					<view :class="$style.content">
+						<view :class="$style.text">{{item.content}}</view>
+					</view>
+					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">完成警情</view>
+				</view>
+			</template>
+			<u-empty margin-top="100" v-else mode="search" text="没有处理中的任务"></u-empty>
 		</view>
 		<!-- 待回执 -->
-		<view :class="$style.item" v-show="current">
-			<template v-if="unReceiptTasks.length">
-				<view :class="$style.card" v-for="item in unReceiptTasks" :key="item.id">
+		<view :class="$style.item" v-show="current === 2">
+			<template v-if="completedTask.length">
+				<view :class="$style.card" v-for="item in completedTask" :key="item.id">
 					<view :class="$style.title">
 						<view :class="$style.user">
 							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
@@ -42,10 +64,10 @@
 					<view :class="$style.content">
 						<view :class="$style.text">{{item.content}}</view>
 					</view>
-					<view :class="$style.action">填写回执</view>
+					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">填写回执</view>
 				</view>
 			</template>
-			<u-empty margin-top="100" v-else mode="search" text="没有待回执任务"></u-empty>
+			<u-empty margin-top="100" v-else mode="search" text="没有待回执的任务"></u-empty>
 		</view>
 	</view>
 </template>
@@ -56,14 +78,18 @@
 	export default {
 		data() {
 			return {
-				unfinishedTasks: [],
-				unReceiptTasks: [],
+				unconfirmedTask: [],
+				inProgressTask: [],
+				completedTask: [],
 				category: [
 					{
 						name: "待处理"
 					},
 					{
-						name: "待回执"
+						name: "处理中"
+					},
+					{
+						name: "已完成"
 					}
 				],
 				current: 0
@@ -73,26 +99,38 @@
 			this.getTaskList(0);
 		},
 		methods: {
+			handleNavigateToDetail(id){
+				uni.navigateTo({
+					url: `/pages/task-detail/index?id=${id}`
+				})
+			},
 			handleNavChange(index) {
 				this.current = index;
 				this.getTaskList(index);
 			},
 			async getTaskList(index) {
-				let status = 2;
-				let result = [];
-				if (index === 1) {
-					status = 0;
+				let status, key;
+				switch(index){
+					case 0:
+						status = 2;
+						key = "unconfirmedTask";
+					break;
+					case 1:
+						status = 3;
+						key = "inProgressTask";
+					break;
+					case 2:
+						status = 0;
+						key = "completedTask"
+					break;
 				}
+				console.log(this[key])
 				try{
-					result = await getTask({status});
+					this[key] = await getTask({status});
 				}catch{
-					result = [];
+					this[key] = [];
 				}
-				if (index === 1) {
-					this.unReceiptTasks = result;
-				} else {
-					this.unfinishedTasks = result;
-				}
+				
 			},
 			handlePhoneCall(number){
 				uni.makePhoneCall({

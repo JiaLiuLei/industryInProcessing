@@ -13,7 +13,6 @@
 			</view>
 		</view>
 		<u-slider
-			@click.native="handleSliderClick"
 			v-model="sliderValue"
 			min="11"
 			max="94"
@@ -21,6 +20,7 @@
 			active-color="#8FFF43"
 			height="120"
 			:use-slot="true"
+			@click.native="handleSliderClick"
 			@end="handleSliderEnd">
 			<view>
 				<view :class="$style.badge">
@@ -47,7 +47,21 @@
 				if (this.sliderValue < 94) {
 					this.sliderValue = 11;
 				} else {
-					console.log('成功')
+					console.log("成功")
+					// const { id, status } = this.sourceData;
+					// try{
+					// 	await api.updateTaskStatus({
+					// 		jqId: id,
+					// 		status
+					// 	});
+					// 	this.getPageData(this.id);
+					// }catch(error){
+					// 	const { message } = error;
+					// 	this.$refs.uToast.show({
+					// 		title: message,
+					// 		type: 'error'
+					// 	})
+					// }
 				}
 			},
 			handleSliderClick() {

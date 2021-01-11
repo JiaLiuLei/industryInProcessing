@@ -3,7 +3,7 @@
 		<view :class="$style.user">
 			<view :class="$style.info">
 				<u-image width="64rpx" height="64rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
-				<text :class="$style.name">周警官</text>
+				<text :class="$style.name">{{alarm.handlePolice}}</text>
 			</view>
 			<text :class="$style.greeting">下午好，欢迎使用交巡警智能管理平台</text>
 		</view>
@@ -40,7 +40,7 @@
 				</view>
 			</view>
 			<view :class="$style.action">
-				<view :class="$style.relevance">
+				<view :class="$style.relevance" @tap="handleRelevanceClick(cardNumber)">
 					<text :class="$style.icon"></text>
 					{{cardNumber ? "解绑" : "绑定"}}巡逻车辆
 				</view>
@@ -50,7 +50,7 @@
 				</view>
 			</view>
 		</template>
-		<InfoCardTaskDetail v-if="isBusy" :sourceData="sourceData.alarm"></InfoCardTaskDetail>
+		<InfoCardTaskDetail v-if="isBusy" :sourceData="alarm"></InfoCardTaskDetail>
 	</view>
 </template>
 
@@ -65,6 +65,9 @@
 			InfoCardTaskDetail
 		},
 		computed:{
+			alarm() {
+				return this.sourceData.alarm || {};
+			},
 			isBusy(){
 				let status = false;
 				const { alarm } = this.sourceData;
@@ -79,12 +82,31 @@
 				if (Array.isArray(bindCard) && bindCard.length) {
 					const card = bindCard[0];
 					try{
-						number = card.slice(1, card.length - 1);
+						const item = card.no;
+						number = item.substring(1, item.length - 1);
 					}catch{
 						number = 0
 					}
 				}
 				return number;
+			}
+		},
+		methods: {
+			handleRelevanceClick(status){
+				if(status) { // 解绑
+					uni.navigateTo({
+						url: "/pages/relevance/index?status=1"
+					})
+				} else { // 绑定
+					uni.scanCode({
+						success(res){
+							console.log(res);
+						},
+						fail(){
+							
+						}
+					})
+				}
 			}
 		}
 	}

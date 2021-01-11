@@ -14,11 +14,11 @@
 						<u-button type="success" size="mini" @tap="getCode">{{tips}}</u-button>
 					</template>
 				</u-form-item>
-				<view :class="$style.remenber">
+				<!-- <view :class="$style.remenber">
 					<u-checkbox-group>
 						<u-checkbox size="28" label-size="28" v-model="form.remenber" shape="circle">记住密码</u-checkbox>
 					</u-checkbox-group>
-				</view>
+				</view> -->
 			</u-form>
 		</view>
 		<u-button type="primary" :custom-style="{width:'100%'}" @tap="submit">登录</u-button>

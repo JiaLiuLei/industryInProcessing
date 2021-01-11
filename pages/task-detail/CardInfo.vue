@@ -3,47 +3,63 @@
 		<view :class="$style.title">
 			<view :class="$style.user">
 				<u-image width="64rpx" height="64rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
-				匿名报警
+				{{sourceData.name ? sourceData.name : "匿名报警"}}
 			</view>
-			<view :class="$style.right">联系报警人<text :class="$style.arrow"></text></view>
+			<view :class="$style.right" @tap="handlePhoneCall(sourceData.phone)">联系报警人<text :class="$style.arrow"></text></view>
 		</view>
-		<view :class="$style.content">刚才红旗河沟立交自西向东路口发生擦刮纠纷</view>
+		<view :class="$style.content">{{sourceData.content}}</view>
 	</view>
 </template>
 
 <script>
 	export default {
-		name: "cardInfo"
+		name: "cardInfo",
+		props: {
+			sourceData: Object
+		},
+		methods: {
+			handlePhoneCall(number) {
+				uni.makePhoneCall({
+					phoneNumber: number
+				});
+			}
+		}
 	}
 </script>
 
 <style lang="scss" module>
-	.container{
+	.container {
 		padding-top: 30rpx;
-		.title{
+
+		.title {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			.user{
+
+			.user {
 				display: flex;
 				align-items: center;
-				.via{
+
+				.via {
 					margin-right: 20rpx;
 				}
 			}
 		}
 	}
-	.right{
+
+	.right {
 		display: flex;
 		align-items: center;
 	}
-	.arrow{
+
+	.arrow {
 		width: 44rpx;
 		height: 44rpx;
 		background: url(../../static/icon-arrow.png) center center no-repeat;
 		background-size: contain;
 	}
-	.content{
+
+	.content {
 		margin-top: 30rpx;
 		padding: 20rpx;
 		background: #F2F2F2;

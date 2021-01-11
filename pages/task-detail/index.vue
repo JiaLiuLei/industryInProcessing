@@ -1,23 +1,23 @@
 <template>
-	<view :class="$style.container">
+	<view :class="$style.container" v-if="pageData">
 		<StepNav :active="activeIndex"></StepNav>
-		<CardInfo></CardInfo>
+		<CardInfo :sourceData="cardData"></CardInfo>
 		<template  v-if="activeIndex !== 3">
 			<view :class="$style.map">
-				<AMap :targetPosition="[121.302412, 31.24755]"></AMap>
+				<AMap :targetPosition="targetPosition"></AMap>
 			</view>
 			<view :class="$style.cell">
 				<text>警情位置</text>
-				<text :class="$style.msg">红旗河沟立交桥武装检查站</text>
+				<text :class="$style.msg">{{pageData.caseAddr}}</text>
 			</view>
 			<view :class="$style.cell">
 				<text>警情时间</text>
-				<text :class="$style.msg">2020/11/12 12:32</text>
+				<text :class="$style.msg">{{pageData.createTime}}</text>
 			</view>
 		</template>
 		<template v-if="activeIndex === 1">
-			<view :class="[$style.btn, $style.mg]" blue>立即处理</view>
-			<view :class="$style.btn">稍后处理</view>
+			<view :class="[$style.btn, $style.mg]" blue @tap="handleImmediateProcessing(pageData.id, pageData.status)">立即处理</view>
+			<view :class="$style.btn" @tap="handleLaterProcessing">稍后处理</view>
 		</template>
 		<template v-if="activeIndex === 2">
 			<u-slider
@@ -28,7 +28,7 @@
 				active-color="#8FFF43"
 				height="120"
 				:use-slot="true"
-				@click.native="handleSliderClick"
+				@tap.native="handleSliderClick"
 				@end="handleSliderEnd">
 				<view>
 					<view :class="$style.badge">
@@ -40,14 +40,29 @@
 		<template v-if="activeIndex === 3">
 			<view :class="$style.update">
 				<view :class="$style.title">回执说明内容</view>
-				<textarea auto-height :maxlength="-1" :class="$style.textarea" placeholder-style="color:#BDC1CC" placeholder="添加更加详细的回执说明"/>
+				<textarea
+					v-model="receiptContent"
+					auto-height
+					:maxlength="-1"
+					:class="$style.textarea"
+					placeholder-style="color:#BDC1CC"
+					placeholder="添加更加详细的回执说明"/>
 				<view :class="$style.upload">
-					<u-upload width="195" height="195" ref="uUpload" :action="upLoadaction"></u-upload>
+					<u-upload
+						width="195"
+						height="195"
+						:form-data="{type: 'image'}"
+						:header="{appkey}"
+						:action="uploadAction"
+						@on-success="handleImageUploadSuccess"
+						@on-remove="handleDeleteImage">
+					</u-upload>
 				</view>
 			</view>
-			<view :class="[$style.btn, $style.mg]" blue>上传回执</view>
-			<view :class="$style.btn">稍后填写回执</view>
+			<view :class="[$style.btn, $style.mg]" blue @tap="handleUploadReceipt">上传回执</view>
+			<view :class="$style.btn" @tap="handleLaterProcessing">稍后填写回执</view>
 		</template>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -55,7 +70,8 @@
 	import StepNav from "./StepNav.vue";
 	import CardInfo from "./CardInfo.vue";
 	import AMap from "@/components/AMap.vue";
-	import { getTaskDetail } from "@/api/task";
+	import * as api from "@/api/task";
+	import config from "@/config";
 	export default {
 		name: "task-detail",
 		components: {
@@ -67,28 +83,146 @@
 			return {
 				activeIndex: 3,
 				sliderValue: 9,
-				upLoadaction: 'http://www.example.com/upload',
-				pageData: {}
+				pageData: null,
+				finished: true,
+				id: "",
+				receiptContent: "",
+				uploadAction: `${config.BASE_URL}/file/upload`,
+				fileList: [],
+				appkey: config.APP_KEY
 			} 
 		},
-		async onLoad() {
-			try{
-				const reuslt = await getTaskDetail({jqId: 1});
-				this.pageData = result;
-			}catch(e){
-				this.pageData = {}
+		computed:{
+			cardData(){
+				const { alarmPersonName, alarmPersonPhone, content } = this.pageData;
+				return {
+					name: alarmPersonName,
+					phone: alarmPersonPhone,
+					content
+				}
+			},
+			targetPosition(){
+				let target = [];
+				try{
+					const { lng, lat } = this.pageData;
+					if(lng && lat) {
+						target = [lng, lat];
+					}
+				}catch{
+					target = []
+				}
+				return target;
 			}
 		},
+		async onLoad(params) {
+			this.id = params.id;
+			this.getPageData(params.id);
+		},
 		methods:{
-			handleSliderEnd() {
+			handleImageUploadSuccess(data){
+				const {data: { attachPath }} = data;
+				const fullUrl = `${config.BASE_URL}${attachPath}`;
+				this.fileList.push(fullUrl);
+			},
+			handleDeleteImage(index){
+				this.fileList.splice(index, 1);
+			},
+			// 上传回执
+			async handleUploadReceipt(){
+				if (!this.receiptContent) {
+					this.$u.toast('请填写回执说明内容');
+					return
+				}
+				if(!this.fileList.length) {
+					this.$u.toast('请上传图片');
+					return
+				}
+				try{
+					await api.uploadReceipt({
+						jqId: this.pageData.id,
+						feedbackContent: this.receiptContent,
+						feedbackUrls: this.fileList
+					});
+					this.handleLaterProcessing();
+				}catch(error){
+					const { message } = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+			},
+			async getPageData(id) {
+				try{
+					const result = await api.getTaskDetail({jqId: id});
+					this.pageData = result;
+					this.changeNavIndex(result.status);
+				}catch(error){
+					const { message } = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+			},
+			// 右滑完成当前警情
+			async handleSliderEnd() {
 				if (this.sliderValue < 94) {
 					this.sliderValue = 9;
 				} else {
-					console.log('成功')
+					const { id, status } = this.pageData;
+					try{
+						await api.updateTaskStatus({
+							jqId: id,
+							status
+						});
+						this.getPageData(this.id);
+					}catch(error){
+						const { message } = error;
+						this.$refs.uToast.show({
+							title: message,
+							type: 'error'
+						})
+					}
 				}
+			},
+			changeNavIndex(status){
+				let index = 1;
+				switch(status){
+					case 0:
+					    index = 3;
+					break;
+					case 2:
+						index = 1;
+						break;
+					case 3:
+						index = 2;
+						break;
+				}
+				this.activeIndex = index;
 			},
 			handleSliderClick() {
 				this.sliderValue = 9;
+			},
+			handleLaterProcessing(){
+				uni.navigateBack();
+			},
+			async handleImmediateProcessing(id, status){
+				if(!this.finished) {
+					return;
+				}
+				this.finished = false;
+				try{
+					await api.dealWithTask({jqId: id});
+					uni.navigateTo('/pages/index/index');
+				}catch(error){
+					const { message } = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+				this.finished = true;
 			}
 		}
 	}

@@ -1,12 +1,12 @@
-const BASE_URL = process.env.NODE_ENV === "production" ? "//116.63.181.9" : "";
-const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzQ2ODE1NzE2ODA3OTY2NzIxIiwiZXhwIjoxNjEwMDI3MjY0LCJ1c2VySWQiOjEzNDY4MTU3MTY4MDc5NjY3MjEsImlhdCI6MTYwOTk0MDg2NCwiYWNjb3VudCI6IjMwMjc4MiIsInVzZXJLZXkiOiJqYi5qeGouand0In0.1_NU9o-Hce54pgoSoEDvQYYGrFq9lHbic0zyxx46RraIc4q-jd_tiOxosd1Nyomc5bSSFNRKmVkZqQYEngIDWw";
+import config from "@/config"
+const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzM5MzExMTMxNTg3NTM4OTQ1IiwiZXhwIjoxNjEwNDU3MTYxLCJ1c2VySWQiOjEzMzkzMTExMzE1ODc1Mzg5NDUsImlhdCI6MTYxMDM3MDc2MSwiYWNjb3VudCI6IjEwMDIwMCIsInVzZXJLZXkiOiJ5ei5hbmJhby55aWRvbmcifQ.ROsljPR0fp2B30hMoxYSkmJYklCW8-zm9LgdVljKsQxCAadn7UBrkXjAbWUe45e1KrQTRYrzm-IxK9LYPvCJgA";
 const request = (url, options) => {
 	return uni.request({
 		header: {
-			appkey: 'jb.jxj.jwt',
+			appkey: config.APP_KEY,
 			token
 		},
-		url: `${BASE_URL}${url}`,
+		url: `${config.BASE_URL}${url}`,
 		...options
 	}).then(response => {
 		const [error, res]  = response;
