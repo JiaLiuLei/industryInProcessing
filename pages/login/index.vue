@@ -22,14 +22,12 @@
 			</u-form>
 		</view>
 		<u-button type="primary" :custom-style="{width:'100%'}" @tap="submit">登录</u-button>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
-	import {
-		login,
-		getCode
-	} from "@/api/user";
+	import * as api from "@/api/user";
 	export default {
 		name: "login",
 		data() {
@@ -39,7 +37,7 @@
 				form: {
 					mobile: "",
 					code: "",
-					remenber: false
+					// remenber: false
 				},
 				rules: {
 					mobile: [{
@@ -67,9 +65,23 @@
 			submit() {
 				this.$refs.uForm.validate(async valid => {
 					if (valid) {
-						await login({
-							userNum: this.form.account
-						});
+						try{
+							const { mobile, code } = this.form;
+							const result = await api.login({ phone:mobile, code });
+							uni.setStorage({
+							    key: 'token',
+							    data: result.sign,
+							    success: function () {
+							        uni.redirectTo({url: "/pages/index/index"});
+							    }
+							});
+						}catch(error){
+							const { message } = error;
+							this.$refs.uToast.show({
+								title: message,
+								type: 'error'
+							})
+						}
 					}
 				});
 			},
@@ -87,18 +99,18 @@
 					return;
 				}
 				if (this.$refs.uCode.canGetCode) {
-					// 模拟向后端请求验证码
 					uni.showLoading({
 						title: '正在获取验证码'
 					})
 					try{
-						const code = await getCode({phone: mobile});
+						const code = await api.getCode({phone: mobile});
 						uni.hideLoading();
 						this.$u.toast('验证码已发送');
 						this.$refs.uCode.start();
-					}catch{
+					}catch(error){
+						const { message } = error;
 						uni.hideLoading();
-						this.$u.toast('验证码发送失败，请重试');
+						this.$u.toast(message);
 					}
 				} else {
 					this.$u.toast('倒计时结束后再发送');

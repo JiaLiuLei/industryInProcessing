@@ -1,5 +1,5 @@
 export default {
-	login: "/api/user/login",
+	login: "/api/user/login/sms",
 	code: "/api/sms/jb/login",
 	bind: "/api/gaw/jxj/bind"
 }

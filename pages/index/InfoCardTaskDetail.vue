@@ -32,6 +32,7 @@
 </template>
 
 <script>
+	import * as api from "@/api/task";
 	export default {
 		name: "infoCardTaskDetail",
 		props: {
@@ -43,25 +44,25 @@
 			}
 		},
 		methods: {
-			handleSliderEnd() {
+			async handleSliderEnd() {
 				if (this.sliderValue < 94) {
 					this.sliderValue = 11;
 				} else {
-					console.log("成功")
-					// const { id, status } = this.sourceData;
-					// try{
-					// 	await api.updateTaskStatus({
-					// 		jqId: id,
-					// 		status
-					// 	});
-					// 	this.getPageData(this.id);
-					// }catch(error){
-					// 	const { message } = error;
-					// 	this.$refs.uToast.show({
-					// 		title: message,
-					// 		type: 'error'
-					// 	})
-					// }
+					const { id, status } = this.sourceData;
+					try{
+						await api.updateTaskStatus({
+							jqId: id,
+							status
+						});
+						this.$emit("change");
+					}catch(error){
+						const { message } = error;
+						this.$refs.uToast.show({
+							title: message,
+							type: 'error'
+						});
+						this.sliderValue = 11;
+					}
 				}
 			},
 			handleSliderClick() {

@@ -20,12 +20,12 @@
 				</view>
 				<view :class="$style.item">
 					<u-icon name="server-fill"></u-icon>
-					<navigator :class="$style.title" url="/pages/task-list/index" hover-class="none">
+					<navigator :class="$style.title" url="/pages/upload-task/index" hover-class="none">
 						警情上报
 					</navigator>
 				</view>
 			</view>
-			<InfoCard :sourceData="pageData"></InfoCard>
+			<InfoCard @onTaskStatusChange="handleTaskStatusChange" :sourceData="pageData"></InfoCard>
 		</view>
 	</view>
 </template>
@@ -60,16 +60,23 @@
 				return target;
 			}
 		},
-		async onLoad() {
-			try{
-				const res = await getHomeInfo();
-				this.pageData = res;
-			}catch{
-				this.pageData = null;
-			}
+		onLoad() {
+			this.getPageData();
 			this.getTaskList();
 		},
 		methods: {
+			handleTaskStatusChange(){
+				this.getPageData();
+			},
+			async getPageData(){
+				try{
+					const res = await getHomeInfo();
+					this.pageData = res;
+				}catch(error){
+					console.log(error);
+					this.pageData = null;
+				}
+			},
 			async getTaskList() {
 				try{
 					const list = await getTask({status: 2});

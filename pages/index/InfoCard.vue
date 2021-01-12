@@ -50,7 +50,7 @@
 				</view>
 			</view>
 		</template>
-		<InfoCardTaskDetail v-if="isBusy" :sourceData="alarm"></InfoCardTaskDetail>
+		<InfoCardTaskDetail @change="$emit('onTaskStatusChange')" v-if="isBusy" :sourceData="alarm"></InfoCardTaskDetail>
 	</view>
 </template>
 
@@ -71,7 +71,7 @@
 			isBusy(){
 				let status = false;
 				const { alarm } = this.sourceData;
-				if (alarm && alarm.status === 3) {
+				if (alarm && alarm.status === 2) {
 					status = true;
 				}
 				return status;

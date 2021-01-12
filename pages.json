@@ -9,6 +9,12 @@
 			}
 		},
 		{
+			"path": "pages/upload-task/index",
+			"style": {
+				"navigationBarTitleText": "上报警情"
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录"

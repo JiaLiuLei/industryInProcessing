@@ -15,3 +15,6 @@ export const updateTaskStatus = options => request(config.updateStatus, { method
 
 // 上传回执信息
 export const uploadReceipt = options => request(config.receipt, { method: "post", data: options });
+
+// 上传警情
+export const uploadTask = options => request(config.uploadTask, { method: "post", data: options });
