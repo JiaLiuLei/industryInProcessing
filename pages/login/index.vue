@@ -71,7 +71,7 @@
 							uni.setStorage({
 							    key: 'token',
 							    data: result.sign,
-							    success: function () {
+							    success (res) {
 							        uni.redirectTo({url: "/pages/index/index"});
 							    }
 							});

@@ -1,15 +1,8 @@
 <template>
 	<view :class="$style.container">
+		<u-navbar z-index="1" title="上报警情"></u-navbar>
 		<u-cell-item title="警情位置" value="当前位置"></u-cell-item>
 		<u-cell-item title="警情类型" :value="typeText" @tap="selectShow = true">
-			<!-- <u-picker
-				slot="right-icon"
-				mode="selector"
-				v-model="selectorShow"
-				:default-selector="[0]"
-				:range="selectorObj"
-				range-key="text">
-			</u-picker> -->
 			<u-select
 				slot="right-icon"
 				v-model="selectShow"
@@ -37,14 +30,19 @@
 		</view>
 		<view :class="[$style.btn, $style.mg]" blue @tap="handleUpload">上报警情</view>
 		<u-toast ref="uToast" />
+		<SearchSite></SearchSite>
 	</view>
 </template>
 
 <script>
 	import config from "@/config";
 	import * as api from "@/api/task";
+	import SearchSite from "./SearchSite";
 	export default {
 		name: "update-task",
+		components:{
+			SearchSite
+		},
 		data() {
 			return {
 				uploadAction: `${config.BASE_URL}/file/upload`,

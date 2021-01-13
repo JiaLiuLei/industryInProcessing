@@ -114,7 +114,7 @@
 				return target;
 			}
 		},
-		async onLoad(params) {
+		onLoad(params) {
 			this.id = params.id;
 			this.getPageData(params.id);
 		},

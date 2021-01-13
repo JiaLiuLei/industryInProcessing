@@ -60,7 +60,7 @@
 				return target;
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getPageData();
 			this.getTaskList();
 		},

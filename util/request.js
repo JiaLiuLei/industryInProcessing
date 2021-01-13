@@ -1,13 +1,14 @@
 import config from "@/config"
-const token = uni.getStorageSync('token');
+
 const request = (url, options) => {
+	const token = uni.getStorageSync('token');
 	let header = { appkey: config.APP_KEY, token};
 	if (options && options.header) {
 		header = {...options.header, ...header};
 		delete options.header;
 	}
 	return uni.request({
-		header: header,
+		header,
 		url: `${config.BASE_URL}${url}`,
 		...options
 	}).then(response => {

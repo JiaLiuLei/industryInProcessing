@@ -11,7 +11,9 @@
 		{
 			"path": "pages/upload-task/index",
 			"style": {
-				"navigationBarTitleText": "上报警情"
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{
