@@ -16,7 +16,7 @@
 			</view>
 		</template>
 		<template v-if="activeIndex === 1">
-			<view :class="[$style.btn, $style.mg]" blue @tap="handleImmediateProcessing(pageData.id, pageData.status)">立即处理</view>
+			<view class="btn mg" blue @tap="handleImmediateProcessing(pageData.id, pageData.status)">立即处理</view>
 			<view class="btn" @tap="handleLaterProcessing">稍后处理</view>
 		</template>
 		<template v-if="activeIndex === 2">
@@ -59,7 +59,7 @@
 					</u-upload>
 				</view>
 			</view>
-			<view :class="[$style.btn, $style.mg]" blue @tap="handleUploadReceipt">上传回执</view>
+			<view class="btn mg" blue @tap="handleUploadReceipt">上传回执</view>
 			<view class="btn" @tap="handleLaterProcessing">稍后填写回执</view>
 		</template>
 		<u-toast ref="uToast" />
@@ -228,7 +228,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container{
 		padding: 0 50rpx 50rpx;
 		.map{

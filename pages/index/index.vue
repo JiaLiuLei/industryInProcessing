@@ -1,8 +1,8 @@
 <template>
-	<!-- <view class="container" v-if="pageData"> -->
 	<view class="container">
 		<view class="map">
-			<AMap :targetPosition="targetPosition" toolbar></AMap>
+			<!-- <AMap :targetPosition="targetPosition" toolbar></AMap> -->
+			<map style="width: 100%; height: 300px;"></map>
 		</view>
 		<view class="detail">
 			<view class="nav">
@@ -27,6 +27,7 @@
 				</view>
 			</view>
 			<InfoCard @onTaskStatusChange="handleTaskStatusChange" :sourceData="pageData"></InfoCard>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -50,14 +51,14 @@
 		computed:{
 			targetPosition(){
 				let target = [];
-				try{
-					const { alarm: { lng, lat, status } } = this.pageData;
-					if(lng && lat && status === 3) {
-						target = [lng, lat];
-					}
-				}catch{
-					target = []
-				}
+				// try{
+				// 	const { alarm: { lng, lat, status } } = this.pageData;
+				// 	if(lng && lat && status === 3) {
+				// 		target = [lng, lat];
+				// 	}
+				// }catch{
+				// 	target = []
+				// }
 				return target;
 			}
 		},
@@ -74,8 +75,12 @@
 					const res = await getHomeInfo();
 					this.pageData = res;
 				}catch(error){
-					// console.log(error);
-					this.pageData = null;
+					this.pageData = {};
+					const { message } = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
 				}
 			},
 			async getTaskList() {
@@ -90,7 +95,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
 		height: 100vh;
 		display: flex;

@@ -59,7 +59,10 @@
 	export default{
 		name:"infoCard",
 		props:{
-			sourceData: Object
+			sourceData: {
+				type: Object,
+				default: () => {}
+			}
 		},
 		components: {
 			InfoCardTaskDetail
@@ -112,7 +115,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.containerInfo{
 		padding: 50rpx;
 		font-size: 24rpx;

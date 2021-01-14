@@ -77,7 +77,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
 		margin-top: 36rpx;
 		border-top: 2rpx solid #3A3E4C;
