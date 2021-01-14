@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="containerInfo">
 		<view class="user">
 			<view class="info">
 				<u-image width="64rpx" height="64rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
@@ -113,7 +113,7 @@
 </script>
 
 <style lang="scss">
-	.container{
+	.containerInfo{
 		padding: 50rpx;
 		font-size: 24rpx;
 		border-radius: 32rpx 32rpx 0px 0px;

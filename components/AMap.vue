@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="containerMap">
 		<view class="map" id="amap-container"></view>
 		<view class="actions" v-if="toolbar">
 			<!-- <view icon="refresh" @click="handleRefreshClick"></view> -->
@@ -120,7 +120,7 @@
 </script>
 
 <style lang="scss">
-.container{
+.containerMap{
 	position: relative;
 	width: 100%;
 	height: 100%;

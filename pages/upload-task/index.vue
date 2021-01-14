@@ -28,7 +28,7 @@
 				</u-upload>
 			</view>
 		</view>
-		<view :class="[$style.btn, $style.mg]" blue @tap="handleUpload">上报警情</view>
+		<view class="btn mg" blue @tap="handleUpload">上报警情</view>
 		<u-toast ref="uToast" />
 		<SearchSite></SearchSite>
 	</view>
