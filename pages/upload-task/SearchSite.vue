@@ -1,8 +1,8 @@
 <template>
-	<view :class="$style.container">
-		<view :class="$style.map" id="map-search"></view>
-		<view :class="$style.tool">
-			<view :class="$style.list">
+	<view class="container">
+		<view class="map" id="map-search"></view>
+		<view class="tool">
+			<view class="list">
 				1
 			</view>
 			<input @input="handleSearchInput" type="text" />
@@ -66,7 +66,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		position: absolute;
 		left: 0;

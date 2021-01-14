@@ -1,23 +1,23 @@
 <template>
-	<view :class="$style.container" v-if="pageData">
+	<view class="container" v-if="pageData">
 		<StepNav :active="activeIndex"></StepNav>
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template  v-if="activeIndex !== 3">
-			<view :class="$style.map">
+			<view class="map">
 				<AMap :targetPosition="targetPosition"></AMap>
 			</view>
-			<view :class="$style.cell">
+			<view class="cell">
 				<text>警情位置</text>
-				<text :class="$style.msg">{{pageData.caseAddr}}</text>
+				<text class="msg">{{pageData.caseAddr}}</text>
 			</view>
-			<view :class="$style.cell">
+			<view class="cell">
 				<text>警情时间</text>
-				<text :class="$style.msg">{{pageData.createTime}}</text>
+				<text class="msg">{{pageData.createTime}}</text>
 			</view>
 		</template>
 		<template v-if="activeIndex === 1">
 			<view :class="[$style.btn, $style.mg]" blue @tap="handleImmediateProcessing(pageData.id, pageData.status)">立即处理</view>
-			<view :class="$style.btn" @tap="handleLaterProcessing">稍后处理</view>
+			<view class="btn" @tap="handleLaterProcessing">稍后处理</view>
 		</template>
 		<template v-if="activeIndex === 2">
 			<u-slider
@@ -31,23 +31,23 @@
 				@tap.native="handleSliderClick"
 				@end="handleSliderEnd">
 				<view>
-					<view :class="$style.badge">
-						<view :class="$style.icon"></view>
+					<view class="badge">
+						<view class="icon"></view>
 					</view>
 				</view>
 			</u-slider>
 		</template>
 		<template v-if="activeIndex === 3">
-			<view :class="$style.update">
-				<view :class="$style.title">回执说明内容</view>
+			<view class="update">
+				<view class="title">回执说明内容</view>
 				<textarea
 					v-model="receiptContent"
 					auto-height
 					:maxlength="-1"
-					:class="$style.textarea"
+					class="textarea"
 					placeholder-style="color:#BDC1CC"
 					placeholder="添加更加详细的回执说明"/>
-				<view :class="$style.upload">
+				<view class="upload">
 					<u-upload
 						width="195"
 						height="195"
@@ -60,7 +60,7 @@
 				</view>
 			</view>
 			<view :class="[$style.btn, $style.mg]" blue @tap="handleUploadReceipt">上传回执</view>
-			<view :class="$style.btn" @tap="handleLaterProcessing">稍后填写回执</view>
+			<view class="btn" @tap="handleLaterProcessing">稍后填写回执</view>
 		</template>
 		<u-toast ref="uToast" />
 	</view>
@@ -228,7 +228,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container{
 		padding: 0 50rpx 50rpx;
 		.map{

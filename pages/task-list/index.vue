@@ -1,70 +1,70 @@
 <template>
 	<view>
-		<view :class="$style.nav">
+		<view class="nav">
 			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="current" @change="handleNavChange"></u-subsection>
 		</view>
 		<!-- 待处理 -->
-		<view :class="$style.item" v-show="current === 0">
+		<view class="item" v-show="current === 0">
 			<template v-if="unconfirmedTask.length">
-				<view :class="$style.card" v-for="item in unconfirmedTask" :key="item.id">
-					<view :class="$style.title">
-						<view :class="$style.user">
-							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+				<view class="card" v-for="item in unconfirmedTask" :key="item.id">
+					<view class="title">
+						<view class="user">
+							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
 							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
 						</view>
-						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+						<view class="relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
 							联系报警人
-							<text :class="$style.arrow"></text>
+							<text class="arrow"></text>
 						</view>
 					</view>
-					<view :class="$style.content">
-						<view :class="$style.text">{{item.content}}</view>
+					<view class="content">
+						<view class="text">{{item.content}}</view>
 					</view>
-					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">立即处理警情</view>
+					<view class="action" @tap="handleNavigateToDetail(item.id)">立即处理警情</view>
 				</view>
 			</template>
 			<u-empty margin-top="100" v-else mode="search" text="没有待处理的任务"></u-empty>
 		</view>
 		<!-- 处理中 -->
-		<view :class="$style.item" v-show="current === 1">
+		<view class="item" v-show="current === 1">
 			<template v-if="inProgressTask.length">
-				<view :class="$style.card" v-for="item in inProgressTask" :key="item.id">
-					<view :class="$style.title">
-						<view :class="$style.user">
-							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+				<view class="card" v-for="item in inProgressTask" :key="item.id">
+					<view class="title">
+						<view class="user">
+							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
 							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
 						</view>
-						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+						<view class="relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
 							联系报警人
-							<text :class="$style.arrow"></text>
+							<text class="arrow"></text>
 						</view>
 					</view>
-					<view :class="$style.content">
-						<view :class="$style.text">{{item.content}}</view>
+					<view class="content">
+						<view class="text">{{item.content}}</view>
 					</view>
-					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">完成警情</view>
+					<view class="action" @tap="handleNavigateToDetail(item.id)">完成警情</view>
 				</view>
 			</template>
 			<u-empty margin-top="100" v-else mode="search" text="没有处理中的任务"></u-empty>
 		</view>
 		<!-- 待回执 -->
-		<view :class="$style.item" v-show="current === 2">
+		<view class="item" v-show="current === 2">
 			<template v-if="completedTask.length">
-				<view :class="$style.card" v-for="item in completedTask" :key="item.id">
-					<view :class="$style.title">
-						<view :class="$style.user">
-							<u-image width="48rpx" height="48rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+				<view class="card" v-for="item in completedTask" :key="item.id">
+					<view class="title">
+						<view class="user">
+							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
 							{{item.alarmPersonName ? item.alarmPersonName : "匿名报警"}}
 						</view>
-						<view :class="$style.relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
+						<view class="relation" @tap="handlePhoneCall(item.alarmPersonPhone)">
 							联系报警人
-							<text :class="$style.arrow"></text>
+							<text class="arrow"></text>
 						</view>
 					</view>
-					<view :class="$style.content">
-						<view :class="$style.text">{{item.content}}</view>
+					<view class="content">
+						<view class="text">{{item.content}}</view>
 					</view>
-					<view :class="$style.action" @tap="handleNavigateToDetail(item.id)">填写回执</view>
+					<view class="action" @tap="handleNavigateToDetail(item.id)">填写回执</view>
 				</view>
 			</template>
 			<u-empty margin-top="100" v-else mode="search" text="没有待回执的任务"></u-empty>
@@ -141,7 +141,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.nav{
 		padding: 20rpx 180rpx;
 		background-color: #fff;

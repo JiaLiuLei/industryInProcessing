@@ -1,13 +1,13 @@
 <template>
-	<view :class="$style.container">
-		<view :class="$style.title">
-			<view :class="$style.user">
-				<u-image width="64rpx" height="64rpx" :class="$style.via" src="../../static/icon-via-default.png" shape="circle"></u-image>
+	<view class="container">
+		<view class="title">
+			<view class="user">
+				<u-image width="64rpx" height="64rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
 				{{sourceData.name ? sourceData.name : "匿名报警"}}
 			</view>
-			<view :class="$style.right" @tap="handlePhoneCall(sourceData.phone)">联系报警人<text :class="$style.arrow"></text></view>
+			<view class="right" @tap="handlePhoneCall(sourceData.phone)">联系报警人<text class="arrow"></text></view>
 		</view>
-		<view :class="$style.content">{{sourceData.content}}</view>
+		<view class="content">{{sourceData.content}}</view>
 	</view>
 </template>
 
@@ -27,7 +27,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		padding-top: 30rpx;
 

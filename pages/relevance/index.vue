@@ -1,16 +1,16 @@
 <template>
-	<view :class="$style.container">
+	<view class="container">
 		<u-image width="550rpx" height="550rpx" src="http://tgi1.jia.com/120/186/20186891.jpg"></u-image>
-		<view :class="$style.plate">渝·A0008<text :class="$style.sign">警</text></view>
-		<view :class="$style.user">
-			<text :class="$style.tip">当前使用人</text>
+		<view class="plate">渝·A0008<text class="sign">警</text></view>
+		<view class="user">
+			<text class="tip">当前使用人</text>
 			<u-image width="88rpx" height="88rpx" src="http://tgi1.jia.com/120/186/20186891.jpg" shape="circle"></u-image>
-			<text :class="$style.name">周警官</text>
+			<text class="name">周警官</text>
 		</view>
 		<!-- 绑定 -->
 		<template v-if="status === 0">
-			<view :class="$style.affirm" @tap="handleBind">确认绑定</view>
-			<view :class="$style.cancel">
+			<view class="affirm" @tap="handleBind">确认绑定</view>
+			<view class="cancel">
 				<navigator open-type="navigateBack" hover-class="none">
 					取消绑定
 				</navigator>
@@ -18,7 +18,7 @@
 		</template>
 		<!-- 解绑 -->
 		<template v-else>
-			<view :class="$style.affirm">解除绑定</view>
+			<view class="affirm">解除绑定</view>
 		</template>
 		
 		<u-toast ref="uToast" />
@@ -54,7 +54,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container{
 		display: flex;
 		flex-direction: column;

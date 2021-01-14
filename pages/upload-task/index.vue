@@ -1,5 +1,5 @@
 <template>
-	<view :class="$style.container">
+	<view class="container">
 		<u-navbar z-index="1" title="上报警情"></u-navbar>
 		<u-cell-item title="警情位置" value="当前位置"></u-cell-item>
 		<u-cell-item title="警情类型" :value="typeText" @tap="selectShow = true">
@@ -12,11 +12,11 @@
 				@confirm="handleTypeChange">
 			</u-select>
 		</u-cell-item>
-		<view :class="$style.update">
-			<view :class="$style.title">警情描述</view>
-			<textarea v-model="describe" auto-height :maxlength="-1" :class="$style.textarea" placeholder-style="color:#BDC1CC"
+		<view class="update">
+			<view class="title">警情描述</view>
+			<textarea v-model="describe" auto-height :maxlength="-1" class="textarea" placeholder-style="color:#BDC1CC"
 			 placeholder="添加更加详细的警情描述" />
-			<view :class="$style.upload">
+			<view class="upload">
 				<u-upload
 					width="195"
 					height="195"
@@ -136,7 +136,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		padding: 0 52rpx;
 		.update{

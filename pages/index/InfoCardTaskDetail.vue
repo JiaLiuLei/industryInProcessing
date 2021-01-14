@@ -1,15 +1,15 @@
 <template>
-	<view :class="$style.container">
-		<view :class="$style.card">
-			<view :class="$style.title">
-				<view :class="$style.user">
+	<view class="container">
+		<view class="card">
+			<view class="title">
+				<view class="user">
 					<u-image width="48rpx" height="48rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
-					<text :class="$style.name">{{sourceData.alarmPersonName ? sourceData.alarmPersonName : "匿名报警"}}</text>
+					<text class="name">{{sourceData.alarmPersonName ? sourceData.alarmPersonName : "匿名报警"}}</text>
 				</view>
-				<view :class="$style.right" @tap="handlePhoneCall(sourceData.alarmPersonPhone)">联系报警人<text :class="$style.arrow"></text></view>
+				<view class="right" @tap="handlePhoneCall(sourceData.alarmPersonPhone)">联系报警人<text class="arrow"></text></view>
 			</view>
-			<view :class="$style.content">
-				<view :class="$style.text">{{sourceData.content}}</view>
+			<view class="content">
+				<view class="text">{{sourceData.content}}</view>
 			</view>
 		</view>
 		<u-slider
@@ -23,8 +23,8 @@
 			@click.native="handleSliderClick"
 			@end="handleSliderEnd">
 			<view>
-				<view :class="$style.badge">
-					<view :class="$style.icon"></view>
+				<view class="badge">
+					<view class="icon"></view>
 				</view>
 			</view>
 		</u-slider>
@@ -77,7 +77,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		margin-top: 36rpx;
 		border-top: 2rpx solid #3A3E4C;

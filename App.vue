@@ -5,7 +5,7 @@
 			    type: 'wgs84',
 				geocode: true,
 			    success: function (res) {
-					console.dir(res)
+					// console.dir(res)
 			    }
 			});
 		}

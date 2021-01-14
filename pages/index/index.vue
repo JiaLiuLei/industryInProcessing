@@ -1,13 +1,14 @@
 <template>
-	<view :class="$style.container" v-if="pageData">
-		<view :class="$style.map">
+	<!-- <view class="container" v-if="pageData"> -->
+	<view class="container">
+		<view class="map">
 			<AMap :targetPosition="targetPosition" toolbar></AMap>
 		</view>
-		<view :class="$style.detail">
-			<view :class="$style.nav">
-				<view :class="$style.item">
+		<view class="detail">
+			<view class="nav">
+				<view class="item">
 					<u-icon name="list"></u-icon>
-					<navigator :class="$style.title" url="/pages/task-list/index" hover-class="none">
+					<navigator class="title" url="/pages/task-list/index" hover-class="none">
 						警情任务
 					</navigator>
 					<u-badge
@@ -18,9 +19,9 @@
 						:count="taskTotal">
 					</u-badge>
 				</view>
-				<view :class="$style.item">
+				<view class="item">
 					<u-icon name="server-fill"></u-icon>
-					<navigator :class="$style.title" url="/pages/upload-task/index" hover-class="none">
+					<navigator class="title" url="/pages/upload-task/index" hover-class="none">
 						警情上报
 					</navigator>
 				</view>
@@ -42,7 +43,7 @@
 		},
 		data() {
 			return {
-				pageData: null,
+				pageData: {},
 				taskTotal: 0
 			}
 		},
@@ -73,7 +74,7 @@
 					const res = await getHomeInfo();
 					this.pageData = res;
 				}catch(error){
-					console.log(error);
+					// console.log(error);
 					this.pageData = null;
 				}
 			},
@@ -89,7 +90,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		height: 100vh;
 		display: flex;

@@ -1,22 +1,22 @@
 <template>
-	<view :class="$style.container">
+	<view class="container">
 		<view :class="[$style.item, {[$style.active]: active >= 0}]">
-			<image src="../../static/icon-step-1.png" :class="$style.img" mode="aspectFit"></image>
+			<image src="../../static/icon-step-1.png" class="img" mode="aspectFit"></image>
 			<view>接受警情</view>
 		</view>
-		<view :class="$style.space"></view>
+		<view class="space"></view>
 		<view :class="[$style.item, {[$style.active]: active >= 1}]">
-			<image src="../../static/icon-step-2.png" :class="$style.img" mode="aspectFit"></image>
+			<image src="../../static/icon-step-2.png" class="img" mode="aspectFit"></image>
 			<view>前往处理</view>
 		</view>
-		<view :class="$style.space"></view>
+		<view class="space"></view>
 		<view :class="[$style.item, {[$style.active]: active >= 2}]">
-			<image src="../../static/icon-step-3.png" :class="$style.img" mode="aspectFit"></image>
+			<image src="../../static/icon-step-3.png" class="img" mode="aspectFit"></image>
 			<view>完成警情</view>
 		</view>
-		<view :class="$style.space"></view>
+		<view class="space"></view>
 		<view :class="[$style.item, {[$style.active]: active >= 3}]">
-			<image src="../../static/icon-step-4.png" :class="$style.img" mode="aspectFit"></image>
+			<image src="../../static/icon-step-4.png" class="img" mode="aspectFit"></image>
 			<view>填写回执</view>
 		</view>
 	</view>
@@ -34,7 +34,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container{
 		margin-top: 20rpx;
 		padding-bottom: 30rpx;

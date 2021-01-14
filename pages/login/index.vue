@@ -1,8 +1,8 @@
 <template>
-	<view :class="$style.container">
-		<view :class="$style.top">
+	<view class="container">
+		<view class="top">
 			<u-image width="448rpx" height="314rpx" :src="require('@/static/logo.png')" mode="aspectFit"></u-image>
-			<u-form :model="form" ref="uForm" :class="$style.form" :error-type="['toast']">
+			<u-form :model="form" ref="uForm" class="form" :error-type="['toast']">
 				<u-form-item label-width="140" label="手机号码" prop="mobile">
 					<u-input maxlength="11" v-model="form.mobile" placeholder="请输入手机号" />
 				</u-form-item>
@@ -14,7 +14,7 @@
 						<u-button type="success" size="mini" @tap="getCode">{{tips}}</u-button>
 					</template>
 				</u-form-item>
-				<!-- <view :class="$style.remenber">
+				<!-- <view class="remenber">
 					<u-checkbox-group>
 						<u-checkbox size="28" label-size="28" v-model="form.remenber" shape="circle">记住密码</u-checkbox>
 					</u-checkbox-group>
@@ -123,7 +123,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container {
 		display: flex;
 		flex-direction: column;

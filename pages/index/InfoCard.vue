@@ -1,52 +1,52 @@
 <template>
-	<view :class="$style.container">
-		<view :class="$style.user">
-			<view :class="$style.info">
+	<view class="container">
+		<view class="user">
+			<view class="info">
 				<u-image width="64rpx" height="64rpx" shape="circle" :src="require('@/static/icon-via-default.png')"></u-image>
-				<text :class="$style.name">{{alarm.handlePolice}}</text>
+				<text class="name">{{alarm.handlePolice}}</text>
 			</view>
-			<text :class="$style.greeting">下午好，欢迎使用交巡警智能管理平台</text>
+			<text class="greeting">下午好，欢迎使用交巡警智能管理平台</text>
 		</view>
 		<!-- 执行任务中 -->
 		<template v-if="isBusy">
-			<view :class="$style.driving">
+			<view class="driving">
 				<view>
-					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
+					<text class="mileage">{{sourceData.todayPatrolDistance}}</text>km
 					<view>今日累计巡逻里程</view>
 				</view>
-				<view :class="$style.plate">渝·{{cardNumber}}<text>警</text></view>
+				<view class="plate">渝·{{cardNumber}}<text>警</text></view>
 			</view>
-			<view :class="$style.task">
+			<view class="task">
 				<view>
-					<text :class="$style.completed">{{sourceData.totalHandleAlarm}}</text>起
+					<text class="completed">{{sourceData.totalHandleAlarm}}</text>起
 					<view>警情处置数</view>
 				</view>
-				<view :class="$style.state" busy>
+				<view class="state" busy>
 					正在进行接处警
-					<text :class="$style.arrow"></text>
+					<text class="arrow"></text>
 				</view>
 			</view>
 		</template>
 		<!-- 空闲状态 -->
 		<template v-else>
-			<view :class="$style.generalize">
+			<view class="generalize">
 				<view>
-					<text :class="$style.mileage">{{sourceData.todayPatrolDistance}}</text>km
+					<text class="mileage">{{sourceData.todayPatrolDistance}}</text>km
 					<view>今日累计巡逻里程</view>
 				</view>
 				<view>
-					<text :class="$style.completed">{{sourceData.totalHandleAlarm}}</text>起
+					<text class="completed">{{sourceData.totalHandleAlarm}}</text>起
 					<view>警情处置数</view>
 				</view>
 			</view>
-			<view :class="$style.action">
-				<view :class="$style.relevance" @tap="handleRelevanceClick(cardNumber)">
-					<text :class="$style.icon"></text>
+			<view class="action">
+				<view class="relevance" @tap="handleRelevanceClick(cardNumber)">
+					<text class="icon"></text>
 					{{cardNumber ? "解绑" : "绑定"}}巡逻车辆
 				</view>
-				<view :class="$style.state" Idle>
+				<view class="state" Idle>
 					当前正在巡逻中
-					<text :class="$style.arrow"></text>
+					<text class="arrow"></text>
 				</view>
 			</view>
 		</template>
@@ -112,7 +112,7 @@
 	}
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 	.container{
 		padding: 50rpx;
 		font-size: 24rpx;
