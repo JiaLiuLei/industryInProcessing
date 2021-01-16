@@ -1,0 +1,440 @@
+<template>
+	<div class="container">
+		<StepNav :active="activeIndex"></StepNav>
+		<!-- <CardInfo :sourceData="cardData"></CardInfo> -->
+		<CardInfo></CardInfo>
+		<template v-if="!activeIndex">
+			<view class="map">
+				<TheMap class="mapstyle" :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
+			</view>
+			<view class="cell">
+				<text class="label">警情位置</text>
+				<text class="msg">{{pageData.caseAddr}}</text>
+			</view>
+			<view class="cell">
+				<text class="label">警情时间</text>
+				<text class="msg">{{pageData.createTime}}</text>
+			</view>
+		</template>
+		<template v-if="!activeIndex">
+			<view class="btn mg blue" @click="handleImmediateProcessing(pageData.id, pageData.status)"><text class="btn-text cfff">立即处理</text></view>
+			<view class="btn mg-t30" @click="handleLaterProcessing"><text class="btn-text">稍后处理</text></view>
+		</template>
+		<template v-if="activeIndex === 2">
+			<!-- <u-slider
+				v-model="sliderValue"
+				min="9"
+				max="94"
+				inactive-color="#F5F5F5"
+				active-color="#8FFF43"
+				height="120"
+				:use-slot="true"
+				@tap.native="handleSliderClick"
+				@end="handleSliderEnd">
+				<view>
+					<view class="badge">
+						<view class="icon"></view>
+					</view>
+				</view>
+			</u-slider> -->
+		</template>
+		<template v-if="activeIndex === 3">
+			<view class="update">
+				<view class="title"><text class="title-text">回执说明内容</text></view>
+				<textarea v-model="receiptContent" :maxlength="-1" class="textarea" placeholder-style="color:#BDC1CC" placeholder="添加更加详细的回执说明" />
+				<view class="upload">
+					<view class="imglist" v-for="(val, idx) in imgFile" :style="{marginRight: ((idx + 1) % 3 == 0 ? '0rpx' : '20rpx')}"><image :src="val" mode="aspectFill" class="picImg" @click="previewImg(idx)"></image><image src="../../static/delete-pic.png" mode="aspectFit" class="delete-pic" @click="deleteImg(idx)"></image></view>
+					<view class="choose-img" @click="chooseImage1"><text class="add-icon">+</text></view>
+				</view>
+			</view>
+			<view class="btn mg blue" @click="handleUploadReceipt"><text class="btn-text cfff">上传回执</text></view>
+			<view class="btn mg-t30" @click="handleLaterProcessing"><text class="btn-text">稍后填写回执</text></view>
+		</template>
+	</div>
+</template>
+
+<script>
+	import StepNav from "./StepNav.nvue";
+	import CardInfo from "./CardInfo.nvue";
+	import TheMap from "@/components/TheMap";
+	import * as api from "@/api/task";
+	import config from "@/config";
+	export default {
+		name: "task-detail",
+		components: {
+			StepNav,
+			CardInfo,
+			TheMap
+		},
+		data() {
+			return {
+				activeIndex: 3,
+				sliderValue: 9,
+				pageData: {
+					caseAddr: '红旗河沟立交桥武装检查站',
+					createTime: '2020/11/12 12:32'
+				},
+				finished: true,
+				id: "",
+				receiptContent: "",
+				uploadAction: `${config.BASE_URL}/file/upload`,
+				fileList: [],
+				appkey: config.APP_KEY,
+				imgFile: [],
+				uploadFileRes: []
+			}
+		},
+		computed: {
+			cardData() {
+				const {
+					alarmPersonName,
+					alarmPersonPhone,
+					content
+				} = this.pageData;
+				return {
+					name: alarmPersonName,
+					phone: alarmPersonPhone,
+					content
+				}
+			},
+			targetPosition() {
+				let target = [];
+				try {
+					const {
+						lng,
+						lat
+					} = this.pageData;
+					if (lng && lat) {
+						target = [lng, lat];
+					}
+				} catch {
+					target = []
+				}
+				return target;
+			}
+		},
+		onLoad(params) {
+			this.id = params.id;
+			this.getPageData(params.id);
+		},
+		methods: {
+			handleImageUploadSuccess(data) {
+				const {
+					data: {
+						attachPath
+					}
+				} = data;
+				const fullUrl = `${config.BASE_URL}${attachPath}`;
+				this.fileList.push(fullUrl);
+			},
+			handleDeleteImage(index) {
+				this.fileList.splice(index, 1);
+			},
+			// 上传回执
+			async handleUploadReceipt() {
+				if (!this.receiptContent) {
+					this.$u.toast('请填写回执说明内容');
+					return
+				}
+				if (!this.fileList.length) {
+					this.$u.toast('请上传图片');
+					return
+				}
+				try {
+					await api.uploadReceipt({
+						jqId: this.pageData.id,
+						feedbackContent: this.receiptContent,
+						feedbackUrls: this.fileList
+					});
+					this.handleLaterProcessing();
+				} catch (error) {
+					const {
+						message
+					} = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+			},
+			async getPageData(id) {
+				try {
+					const result = await api.getTaskDetail({
+						jqId: id
+					});
+					this.pageData = result;
+					this.changeNavIndex(result.status);
+				} catch (error) {
+					const {
+						message
+					} = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+			},
+			// 右滑完成当前警情
+			async handleSliderEnd() {
+				if (this.sliderValue < 94) {
+					this.sliderValue = 9;
+				} else {
+					const {
+						id,
+						status
+					} = this.pageData;
+					try {
+						await api.updateTaskStatus({
+							jqId: id,
+							status
+						});
+						this.getPageData(this.id);
+					} catch (error) {
+						const {
+							message
+						} = error;
+						this.$refs.uToast.show({
+							title: message,
+							type: 'error'
+						})
+					}
+				}
+			},
+			changeNavIndex(status) {
+				let index = 1;
+				switch (status) {
+					case 0:
+						index = 3;
+						break;
+					case 2:
+						index = 1;
+						break;
+					case 3:
+						index = 2;
+						break;
+				}
+				this.activeIndex = index;
+			},
+			handleSliderClick() {
+				this.sliderValue = 9;
+			},
+			handleLaterProcessing() {
+				uni.navigateBack();
+			},
+			async handleImmediateProcessing(id, status) {
+				if (!this.finished) {
+					return;
+				}
+				this.finished = false;
+				try {
+					await api.dealWithTask({
+						jqId: id
+					});
+					uni.navigateTo('/pages/index/index');
+				} catch (error) {
+					const {
+						message
+					} = error;
+					this.$refs.uToast.show({
+						title: message,
+						type: 'error'
+					})
+				}
+				this.finished = true;
+			},
+			
+			
+			chooseImage1() {
+				if(this.imgFile.length >= 9) {
+					uni.showToast({
+					    title: '最多上传9张图片',
+					    duration: 2000,
+						icon: 'none'
+					});
+					return false;
+				} else{
+					//选择图片
+					uni.chooseImage({
+						count: 9, //默认9
+						sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+						sourceType: ['album', 'camera'], //从相册选择
+						success: (res) => {
+							// console.log(JSON.stringify(res.tempFilePaths));
+							let temps = res.tempFilePaths
+							this.imgFile.push(...temps);
+							console.log(this.imgFile);
+							//上传图片
+							for(let i=0; i<temps.length; i++){
+								uni.uploadFile({
+									url: uploadAction,
+									filePath: temps[i],
+									name: 'file',
+									formData: {
+										'type': 'image',
+										'file': temps[i]
+									},
+									header: {appkey: this.appkey},
+									success: (uploadFileRes) => {
+										console.log(uploadFileRes.data);
+										let res = uploadFileRes.data;
+										if(res.code == 200){
+											this.uploadFileRes.push(res.data.attachPath);
+										} else{
+											uni.showToast({
+											    title: '图片上传失败',
+											    duration: 2000,
+												icon: 'none'
+											});
+											this.imgFile = this.imgFile.filter((item, index) => index !== i);
+										}
+									}
+								});
+							}
+						}
+					});
+				}
+			},
+			previewImg(current){
+				// 预览图片
+				uni.previewImage({
+					current: current,
+					urls: this.imgFile,
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+						},
+						fail: function(err) {
+							console.log(err.errMsg);
+						}
+					}
+				});
+			},
+			deleteImg(idx){
+				//删除图片
+				this.imgFile = this.imgFile.filter((item, index) => index !== idx);
+				this.uploadFileRes = this.uploadFileRes.filter((item, index) => index !== idx);
+			},
+			uploadImg(){
+				// 上传图片
+				
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.container {
+		padding: 0 50rpx 50rpx;
+		background-color: #FFFFFF;
+	}
+
+	.map{
+		margin-top: 30rpx;
+		width: 650rpx;
+		height: 300rpx;
+		border-radius: 16rpx;
+		border-width: 2rpx;
+		border-style: solid;
+		border-color: #D7D7D7;
+		overflow: hidden;
+	}
+	.mapstyle {
+		width: 650rpx;
+		height: 300rpx;
+		border-radius: 16rpx;
+		overflow: hidden;
+	}
+	.cell{
+		flex-direction: row;
+		margin-top: 20px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.label{
+		font-size: 32rpx;
+		color: #BDC1CC;
+	}
+	.msg{
+		font-size: 32rpx;
+		color: #424758;
+	}
+	.btn{
+		height: 100rpx;
+		border-radius: 16rpx;
+		text-align: center;
+		background-color: #F5F5F5;
+		justify-content: center;
+		align-items: center;
+	}
+	.btn-text{
+		color: #6C6F7B;
+		font-size: 32rpx;
+	}
+	.blue{
+		background-color: #0055FE;
+	}
+	.cfff{
+		color: #FFFFFF;
+	}
+	.mg{
+		margin-top: 140rpx;
+	}
+	.mg-t30{
+		margin-top: 30rpx;
+	}
+	.update{
+		margin-top: 50rpx;
+	}
+	.title-text{
+		font-size: 32rpx;
+		color: #202536;
+	}
+	.textarea{
+		font-size: 28rpx;
+		padding: 20rpx 0;
+		width: 650rpx;
+		height: 200rpx;
+	}
+	.upload{
+		margin-top: 40rpx;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.choose-img{
+		width: 202rpx;
+		height: 202rpx;
+		border-width: 2rpx;
+		border-style: dashed;
+		border-color: #202536;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 20rpx;
+	}
+	.add-icon{
+		font-size: 52rpx;
+		font-weight: 300;
+		color: #BDC1CC;
+	}
+	.imglist{
+		width: 202rpx;
+		height: 202rpx;
+		margin-right: 20rpx;
+		margin-bottom: 20rpx;
+		background-color: #eee;
+		position: relative;
+	}
+	.picImg{
+		width: 202rpx;
+		height: 202rpx;
+		border-radius: 4rpx;
+	}
+	.delete-pic{
+		width: 202rpx;
+		height: 53rpx;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		z-index: 2;
+	}
+</style>
