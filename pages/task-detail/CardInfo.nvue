@@ -1,0 +1,89 @@
+<template>
+	<view class="container">
+		<view class="title">
+			<view class="user">
+				<image src="../../static/icon-via-default.png" class="via" mode="aspectFit"></image>
+				<text class="username">{{sourceData.name ? sourceData.name : "匿名报警"}}</text>
+			</view>
+			<view class="right" @click="handlePhoneCall(sourceData.phone)">
+				<text class="userphone">联系报警人</text>
+				<image src="../../static/icon-arrow.png" class="arrow" mode="aspectFit"></image>
+			</view>
+		</view>
+		<view class="content"><text class="content-text">{{sourceData.content}}</text></view>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: "cardInfo",
+		props: {
+			sourceData: {
+				type: Object,
+				default: {
+					name: '测试123',
+					phone: '13162170706',
+					content: '刚才红旗河沟立交自西向东路口发生擦刮纠纷事故，出现严重交通拥堵'
+				}
+			}
+		},
+		methods: {
+			handlePhoneCall(number) {
+				uni.makePhoneCall({
+					phoneNumber: number
+				});
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.container {
+		padding-top: 30rpx;
+	}
+
+	.title {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		height: 64rpx;
+	}
+
+	.user {
+		flex-direction: row;
+		align-items: center;
+	}
+	.username{
+		font-size: 32rpx;
+	}
+	.userphone{
+		font-size: 28rpx;
+	}
+
+	.via {
+		margin-right: 20rpx;
+		width: 64rpx;
+		height: 64rpx;
+	}
+
+	.right {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.arrow {
+		width: 44rpx;
+		height: 44rpx;
+	}
+
+	.content {
+		margin-top: 30rpx;
+		padding: 30rpx 20rpx;
+		background-color: #F2F2F2;
+		border-radius: 8rpx;
+	}
+	
+	.content-text{
+		font-size: 28rpx;
+	}
+</style>
