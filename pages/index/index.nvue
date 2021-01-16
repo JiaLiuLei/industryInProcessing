@@ -2,18 +2,21 @@
 	<div class="container" :style="{height: phoneHeight}">
 		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
 		<div id="content" class="content">
-			<UserInfo></UserInfo>
-			<LeisureStatus></LeisureStatus>
-			<BsyStatus></BsyStatus>
+			<TheNav></TheNav>
+			<div class="detail">
+				<UserInfo></UserInfo>
+				<LeisureStatus></LeisureStatus>
+				<BusyStatus></BusyStatus>
+			</div>
 		</div>
-		<div class="gap"></div>
 	</div>
 </template>
 
 <script>
 	import UserInfo from "./UserInfo.nvue";
 	import LeisureStatus from "./LeisureStatus";
-	import BsyStatus from "./BusyStatus";
+	import BusyStatus from "./BusyStatus";
+	import TheNav from "./TheNav";
 	import TheMap from "@/components/TheMap";
 
 	export default {
@@ -21,7 +24,8 @@
 			TheMap,
 			UserInfo,
 			LeisureStatus,
-			BsyStatus
+			BusyStatus,
+			TheNav
 		},
 		data() {
 			return {
@@ -69,21 +73,16 @@
 		flex-direction: column;
 		background-color: #2C2F3A;
 	}
-
 	.map {
 		width: 750rpx;
 	}
-
 	.content {
-		padding: 50rpx 50rpx 1rpx 50rpx;
 		margin-top: -50rpx;
+	}
+	.detail{
+		padding: 50rpx 50rpx 1rpx 50rpx;
 		background-color: #2C2F3A;
 		border-top-left-radius: 50rpx;
 		border-top-right-radius: 50rpx;
-	}
-
-	.gap {
-		height: 49rpx;
-		background-color: #2C2F3A;
 	}
 </style>

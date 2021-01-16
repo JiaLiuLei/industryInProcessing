@@ -1,0 +1,72 @@
+<template>
+	<div class="container">
+		<div class="item">
+			<image class="icon" src="../../static/icon-task.png"></image>
+			<navigator class="title" url="/pages/task-list/index" hover-class="none">
+				<text class="text">警情任务</text>
+			</navigator>
+			<div class="badge-box">
+				<text class="badge">12</text>
+			</div>
+		</div>
+		<div class="gap"></div>
+		<div class="item">
+			<image class="icon" src="../../static/icon-message.png"></image>
+			<navigator class="title" url="/pages/upload-task/index" hover-class="none">
+				<text class="text">警情上报</text>
+			</navigator>
+			<div class="badge-box">
+				<text class="badge">12</text>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style scoped>
+.container{
+	flex-direction: row;
+	align-items: center;
+	padding: 25rpx 0;
+	border-top-left-radius: 50rpx;
+	border-top-right-radius: 50rpx;
+	background-color: #fff;
+}
+.item{
+	flex: 1;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+.icon{
+	width: 24rpx;
+	height: 24rpx;
+}
+.text{
+	margin-left: 10rpx;
+	font-size: 30rpx;
+}
+.gap{
+	width: 3rpx;
+	height: 30rpx;
+	background-color: #eee;
+}
+.badge-box{
+	width: 30rpx;
+	height: 30rpx;
+	align-items: center;
+	justify-content: center;
+	margin-left: 10rpx;
+	border-radius: 30rpx;
+	background-color: #FF6854;
+}
+.badge{
+	font-size: 16rpx;
+	color: #fff;
+}
+</style>
