@@ -80,8 +80,7 @@
 				uploadAction: `${config.BASE_URL}/file/upload`,
 				fileList: [],
 				appkey: config.APP_KEY,
-				imgFile: [],
-				uploadFileRes: []
+				imgFile: []
 			}
 		},
 		computed: {
@@ -278,7 +277,7 @@
 										console.log(uploadFileRes.data);
 										let res = uploadFileRes.data;
 										if(res.code == 200){
-											this.uploadFileRes.push(res.data.attachPath);
+											this.fileList.push(res.data.attachPath);
 										} else{
 											uni.showToast({
 											    title: '图片上传失败',
@@ -313,7 +312,7 @@
 			deleteImg(idx){
 				//删除图片
 				this.imgFile = this.imgFile.filter((item, index) => index !== idx);
-				this.uploadFileRes = this.uploadFileRes.filter((item, index) => index !== idx);
+				this.fileList = this.fileList.filter((item, index) => index !== idx);
 			},
 			uploadImg(){
 				// 上传图片
