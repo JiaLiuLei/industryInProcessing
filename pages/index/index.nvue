@@ -1,9 +1,10 @@
 <template>
 	<div class="container" :style="{height: phoneHeight}">
-		<TheMap :height="mapHeight" :width="phoneWidth" :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
+		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
 		<div id="content" class="content">
 			<UserInfo></UserInfo>
 			<LeisureStatus></LeisureStatus>
+			<BsyStatus></BsyStatus>
 		</div>
 		<div class="gap"></div>
 	</div>
@@ -12,13 +13,15 @@
 <script>
 	import UserInfo from "./UserInfo.nvue";
 	import LeisureStatus from "./LeisureStatus";
+	import BsyStatus from "./BusyStatus";
 	import TheMap from "@/components/TheMap";
 
 	export default {
 		components: {
 			TheMap,
 			UserInfo,
-			LeisureStatus
+			LeisureStatus,
+			BsyStatus
 		},
 		data() {
 			return {

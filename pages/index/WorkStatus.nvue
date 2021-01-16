@@ -1,0 +1,86 @@
+<template v-if="status === 2">
+	<div class="container">
+		<div class="status busy"></div>
+		<text class="text">正在进行接处警</text>
+		<image class="arrow" src="../../static/icon-arrow.png"></image>
+	</div>
+</template>
+<template v-else>
+	<picker mode="selector" :value="value" :range="array" @change="handlePickerChange">
+		<div class="container">
+			<div class="status"></div>
+			<text class="text">{{array[value]}}</text>
+			<image class="arrow" src="../../static/icon-arrow.png"></image>
+		</div>
+	</picker>
+</template>
+
+<script>
+	export default {
+		props: {
+			status: {
+				type: Number, // 2为有任务正在处理, 0下班, 1上班
+				default: 1
+			}
+		},
+		data() {
+			return {
+				array: ["上班", "下班"],
+				value: 0
+			}
+		},
+		computed: {
+			text() {
+				let text = "上班";
+				switch (this.status) {
+					case 2:
+						text = "正在进行接处警";
+						break;
+					case 0:
+						text = "下班";
+						break;
+				}
+				return text;
+			}
+		},
+		methods: {
+			handlePickerChange(value) {
+				const {
+					detail
+				} = value;
+				if (detail.value !== this.value) {
+					this.value = detail.value;
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.container {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.status {
+		width: 16rpx;
+		height: 16rpx;
+		margin-right: 20rpx;
+		border-radius: 16rpx;
+		background-color: #55FF00;
+	}
+
+	.busy {
+		background-color: #FF6854;
+	}
+
+	.text {
+		font-size: 28rpx;
+		color: #fff;
+	}
+
+	.arrow {
+		width: 44rpx;
+		height: 44rpx;
+	}
+</style>

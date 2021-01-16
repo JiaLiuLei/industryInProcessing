@@ -13,7 +13,7 @@
 			enable-traffic
 			show-location>
 		</map>
-		<div class="controls">
+		<div class="controls" v-if="controls">
 			<div class="refresh" @click="handleReresh">
 				<image class="icon" src="/static/icon-refresh.png"></image>
 			</div>
@@ -30,7 +30,8 @@
 		props:{
 			height: [Number || String],
 			width: [Number || String],
-			destination: Object
+			destination: Object,
+			controls: Boolean
 		},
 		data() {
 			return {
