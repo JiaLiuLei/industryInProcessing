@@ -1,34 +1,96 @@
 <template>
 	<div class="container">
 		<div class="info">
-			<div class="mileage">
+			<div>
 				<div class="mileage-detail">
-					<text class="number">284</text><text class="unit">Km</text>
+					<text class="big-number">284</text><text class="unit">Km</text>
 				</div>
 				<text class="text">今日累计巡逻里程</text>
 			</div>
-			<div class="task"></div>
+			<div>
+				<div class="task-detail">
+					<text class="small-number">27</text><text class="text">起</text>
+				</div>
+				<text class="text">警情处置数</text>
+			</div>
+		</div>
+		<div class="tool">
+			<div class="btn">
+				<image class="icon-relevance" src="/static/icon-relevance.png"></image>
+				<text class="btn-text">绑定巡逻车辆</text>
+			</div>
+			<WorkStatus></WorkStatus>
 		</div>
 	</div>
 </template>
 
 <script>
+	import WorkStatus from "./WorkStatus";
 	export default {
-		
+		components: {
+			WorkStatus
+		}
 	}
 </script>
 
 <style scoped>
+.container{
+	margin-top: 50rpx;
+}
 .info{
 	flex-direction: row;
+	align-items: flex-end;
 	justify-content: space-between;
 }
 .mileage-detail{
 	flex-direction: row;
+	align-items: flex-end;
+}
+.big-number{
+	font-size: 100rpx;
+	line-height: 100rpx;
+	color: #fff;
+}
+.unit{
+	font-size: 28rpx;
+	color: #6C6F7B;
 }
 .text{
 	font-size: 24rpx;
 	color: #6C6F7B;
 }
+.task-detail{
+	flex-direction: row;
+	align-items: center;
+}
+.small-number{
+	font-size: 60rpx;
+	line-height: 60rpx;
+	color: #fff;
+}
 
+.tool{
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 50rpx;
+}
+.btn{
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 300rpx;
+	height: 88rpx;
+	background-color: #424758;
+	border-radius: 8rpx;
+}
+.icon-relevance{
+	width: 32rpx;
+	height: 32rpx;
+}
+.btn-text{
+	margin-left: 10rpx;
+	font-size: 28rpx;
+	color: #BDC1CC;
+}
 </style>

@@ -1,0 +1,130 @@
+<template>
+	<div class="slider" :style="{height: `${height}rpx`, backgroundColor: bgColor}">
+		<div class="tip">
+			<image class="arrow" src="../../static/icon-arrow-double.png"></image>
+			<text class="tip-text">右划完成当前警情处理</text>
+		</div>
+		<div :class="['progress-bar', {back: back}]" :style="{height: `${height}rpx`, width: blockWidth / 2 + sliderMoveDistance}"></div>
+		<movable-area class="slider-box" :style="{height: `${height}rpx`}">
+			<movable-view
+				:style="{height: `${height}rpx`, width: `${blockWidth}rpx`}"
+				direction="horizontal"
+				:x="sliderMoveDistance"
+				:out-of-bounds="sliderMoveDistance > 0"
+				:animation="false"
+				@change="handleSliderBlockChange"
+				class="slider-block">
+					<image class="block-icon" src="/static/icon-file-done.png"></image>
+			</movable-view>
+		</movable-area>
+	</div>
+</template>
+
+<script>
+	export default {
+		name:"slider",
+		props:{
+			height: {
+				type: [Number, String],
+				default: 120
+			},
+			bgColor: {
+				type: String,
+				default: "#424758"
+			},
+			blockWidth: {
+				type: [Number, String],
+				default: 120
+			}
+		},
+		data() {
+			return {
+				sliderMoveDistance: 0,
+				timer: null,
+				back: false,
+				finish: false
+			}
+		},
+		methods:{
+			handleSliderBlockChange(event){
+				let status = false;
+				this.back = false;
+				this.finish = false;
+				const { x, source } = event.detail;
+				this.sliderMoveDistance = x < 0 ? 0 : x;
+				clearTimeout(this.timer);
+				this.timer = setTimeout(() => {
+					if (source === "touch") {
+						this.sliderMoveDistance = 0;
+						this.back = true;
+					} else {
+						if (x > 0) {
+							this.finish = true;
+						}
+					}
+				}, 200);
+			}
+		},
+		watch:{
+			finish(status){
+				if(status) {
+					this.$emit('success');
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.slider{
+	position: relative;
+	flex-direction: row;
+	border-radius: 16rpx;
+}
+.slider-box{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 650rpx;
+	background-color: transparent;
+	z-index: 3;
+}
+.slider-block{
+	align-items: center;
+	justify-content: center;
+	background-color: #8FFF43;
+	border-radius: 16rpx;
+}
+.block-icon{
+	width: 49rpx;
+	height: 49rpx;
+}
+.tip{
+	flex: 1;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 140rpx;
+}
+.arrow{
+	width: 44rpx;
+	height: 44rpx;
+}
+.tip-text{
+	margin-left: 60rpx;
+	font-size: 28rpx;
+	color: #6C6F7B;
+}
+.progress-bar{
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: #8FFF43;
+	border-radius: 16rpx;
+	z-index:2;
+}
+.back{
+	transition-property: width;
+	transition-duration: .2s;
+}
+
+</style>

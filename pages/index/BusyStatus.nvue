@@ -1,0 +1,180 @@
+<template>
+	<div class="container">
+		<div class="car">
+			<div>
+				<div class="mileage-detail">
+					<text class="big-number">284</text><text class="unit">Km</text>
+				</div>
+				<text class="text">今日累计巡逻里程</text>
+			</div>
+			<div class="card">
+				<text class="card-text">渝·A0008</text><text class="card-text tangerine">警</text>
+			</div>
+		</div>
+		<div class="task">
+			<div>
+				<div class="task-detail">
+					<text class="small-number">27</text><text class="text">起</text>
+				</div>
+				<text class="text">警情处置数</text>
+			</div>
+			<WorkStatus></WorkStatus>
+		</div>
+		<div class="task-info">
+			<div class="card-box">
+				<div class="user">
+					<div class="user-box">
+						<image class="via" src="/static/icon-via-default.png"></image>
+						<text class="name">周警官</text>
+					</div>
+					<div class="call-box">
+						<text class="call">联系报警人</text>
+						<image class="arrow" src="../../static/icon-arrow.png"></image>
+					</div>
+				</div>
+				<text class="user-task-detail">刚才红旗河沟立交自西向东路口发生擦刮纠纷</text>
+			</div>
+		</div>
+		<TheSlider class="slider"></TheSlider>
+		<!-- <div class="slider">
+			<movable-area class="slider-box">
+				<movable-view
+					direction="horizontal"
+					@change="handleSliderBlockChange"
+					class="slider-block">1111</movable-view>
+			</movable-area>
+		</div> -->
+	</div>
+</template>
+
+<script>
+	import WorkStatus from "./WorkStatus";
+	import TheSlider from "@/components/Theslider";
+	export default {
+		components: {
+			WorkStatus,
+			TheSlider
+		},
+		methods:{
+			handleSliderBlockChange(){
+				console.log(1)
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.container{
+	margin-top: 50rpx;
+}
+.car{
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: space-between;
+}
+.mileage-detail{
+	flex-direction: row;
+	align-items: flex-end;
+}
+.big-number{
+	font-size: 100rpx;
+	line-height: 100rpx;
+	color: #fff;
+}
+.unit{
+	font-size: 28rpx;
+	color: #6C6F7B;
+}
+.text{
+	font-size: 24rpx;
+	color: #6C6F7B;
+}
+.card{
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 300rpx;
+	height: 88rpx;
+	border-width: 4rpx;
+	border-color: #BDC1CC;
+	border-style: solid;
+	border-radius: 8rpx;
+	background-color: #fff;
+}
+.card-text{
+	font-size: 36rpx;
+	color: #000;
+}
+.tangerine{
+	color: #FF6854;
+}
+
+.task{
+	margin-top: 40rpx;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+.task-detail{
+	flex-direction: row;
+	align-items: flex-end;
+}
+.small-number{
+	font-size: 60rpx;
+	line-height: 60rpx;
+	color: #fff;
+}
+.task-info{
+	margin-top: 36rpx;
+	border-top-width: 2rpx;
+	border-top-color: #3A3E4C;
+	border-top-style: solid;
+}
+.card-box{
+	padding: 20rpx;
+	border-radius: 16rpx;
+	background-color: #fff;
+}
+.user{
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+.user-box{
+	flex-direction: row;
+	align-items: center;
+}
+.via{
+	width: 64rpx;
+	height: 64rpx;
+	border-radius: 64rpx;
+}
+.name{
+	margin-left: 10rpx;
+	font-size: 28rpx;
+	color: #424758;
+}
+.call-box{
+	flex-direction: row;
+	align-items: center;
+}
+.call{
+	font-size: 28rpx;
+	color: #424758;
+}
+.arrow{
+	width: 44rpx;
+	height: 44rpx;
+}
+.user-task-detail{
+	margin-top: 20rpx;
+	padding: 30rpx 20rpx;
+	font-size: 28rpx;
+	border-radius: 8rpx;
+	color: #202536;
+	background-color: #F2F2F2;
+}
+.slider{
+	margin-top: 30rpx;
+}
+</style>
