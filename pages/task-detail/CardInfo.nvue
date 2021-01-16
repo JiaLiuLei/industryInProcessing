@@ -18,14 +18,7 @@
 	export default {
 		name: "cardInfo",
 		props: {
-			sourceData: {
-				type: Object,
-				default: {
-					name: '测试123',
-					phone: '13162170706',
-					content: '刚才红旗河沟立交自西向东路口发生擦刮纠纷事故，出现严重交通拥堵'
-				}
-			}
+			sourceData: Object
 		},
 		methods: {
 			handlePhoneCall(number) {
