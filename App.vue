@@ -1,13 +1,20 @@
 <script>
+	import * as api from "@/api/public";
+	
 	export default {
 		onLaunch: function() {
-			uni.getLocation({
-			    type: 'wgs84',
-				geocode: true,
-			    success: function (res) {
-					// console.dir(res)
-			    }
-			});
+			// 10秒上传一次定位
+			setInterval(() => {
+				uni.getLocation({
+					type: "gcj02",
+					geocode: true,
+				    success: (res) => {
+						const { longitude, latitude } = res;
+						this.uploadLocation({longitude, latitude})
+				    }
+				});
+			}, 10000);
+			
 			
 			// #ifdef APP-PLUS
 			const _self = this;
@@ -27,6 +34,25 @@
 				_handlePush(message);
 			});
 			// #endif
+		},
+		methods:{
+			async uploadLocation(location) {
+				const { longitude, latitude } = location;
+				const params = {
+					type: "person",
+					pushBaseElementParamList: [
+						{
+							no: "1",
+							location: `${longitude},${latitude}`
+						}
+					]
+				}
+				try{
+					const result = await api.uploadLocation(params);
+				}catch(error){
+					console.log(error);
+				}
+			}
 		}
 	}
 </script>

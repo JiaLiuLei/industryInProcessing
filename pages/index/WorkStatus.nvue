@@ -1,4 +1,4 @@
-<template v-if="status === 2">
+<template v-if="status === 3">
 	<div class="container">
 		<div class="status busy"></div>
 		<text class="text">正在进行接处警</text>
@@ -49,6 +49,7 @@
 					detail
 				} = value;
 				if (detail.value !== this.value) {
+					// const workStatus = detail.value === 0 ? 2 : 1;
 					this.value = detail.value;
 				}
 			}

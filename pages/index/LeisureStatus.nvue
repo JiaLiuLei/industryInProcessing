@@ -3,13 +3,13 @@
 		<div class="info">
 			<div>
 				<div class="mileage-detail">
-					<text class="big-number">284</text><text class="unit">Km</text>
+					<text class="big-number">{{alarm.todayPatrolDistance || 0}}</text><text class="unit">Km</text>
 				</div>
 				<text class="text">今日累计巡逻里程</text>
 			</div>
 			<div>
 				<div class="task-detail">
-					<text class="small-number">27</text><text class="text">起</text>
+					<text class="small-number">{{alarm.totalHandleAlarm || 0}}</text><text class="text">起</text>
 				</div>
 				<text class="text">警情处置数</text>
 			</div>
@@ -17,9 +17,16 @@
 		<div class="tool">
 			<div class="btn">
 				<image class="icon-relevance" src="/static/icon-relevance.png"></image>
-				<text class="btn-text">绑定巡逻车辆</text>
+
+				<navigator v-if="bindCard.length" class="title" url="/pages/relevance/index" hover-class="none">
+					<text class="btn-text">解绑巡逻车辆</text>
+				</navigator>
+				
+				<navigator v-else class="title" @click="handleBindCar" hover-class="none">
+					<text class="btn-text">绑定巡逻车辆</text>
+				</navigator>
 			</div>
-			<WorkStatus></WorkStatus>
+			<WorkStatus :status="alarm.status"></WorkStatus>
 		</div>
 	</div>
 </template>
@@ -27,8 +34,42 @@
 <script>
 	import WorkStatus from "./WorkStatus";
 	export default {
+		props:{
+			sourceData: Object
+		},
 		components: {
 			WorkStatus
+		},
+		computed:{
+			alarm() {
+				let obj = Object.create(null);
+				const { alarm } = this.sourceData;
+				if (alarm != null && typeof alarm === "object") {
+					obj = alarm;
+				}
+				return obj;
+			},
+			bindCard() {
+				let arr = [];
+				const { bindCard } = this.sourceData;
+				if (Array.isArray(bindCard)) {
+					arr = bindCard;
+				}
+				return arr;
+			}
+		},
+		methods:{
+			handleBindCar(){
+				uni.scanCode({
+				    success: function (res) {
+				        console.log('条码类型：' + res.scanType);
+				        console.log('条码内容：' + res.result);
+						uni.navigateTo({
+							url: "/pages/relevance/index"
+						})
+				    }
+				});
+			}
 		}
 	}
 </script>

@@ -5,8 +5,8 @@
 			<navigator class="title" url="/pages/task-list/index" hover-class="none">
 				<text class="text">警情任务</text>
 			</navigator>
-			<div class="badge-box">
-				<text class="badge">12</text>
+			<div class="badge-box" v-if="sourceData.length">
+				<text class="badge">{{ sourceData.length }}</text>
 			</div>
 		</div>
 		<div class="gap"></div>
@@ -15,16 +15,15 @@
 			<navigator class="title" url="/pages/upload-task/index" hover-class="none">
 				<text class="text">警情上报</text>
 			</navigator>
-			<div class="badge-box">
-				<text class="badge">12</text>
-			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		
+		props:{
+			sourceData: Array
+		}
 	}
 </script>
 
