@@ -14,7 +14,7 @@
 				:animation="false"
 				@change="handleSliderBlockChange"
 				class="slider-block">
-					<image class="block-icon" src="/static/icon-file-done.png"></image>
+					<image class="block-icon" src="../../static/icon-file-done.png"></image>
 			</movable-view>
 		</movable-area>
 	</div>
@@ -47,10 +47,10 @@
 		},
 		methods:{
 			handleSliderBlockChange(event){
+				const { x, source } = event.detail;
 				let status = false;
 				this.back = false;
 				this.finish = false;
-				const { x, source } = event.detail;
 				this.sliderMoveDistance = x < 0 ? 0 : x;
 				clearTimeout(this.timer);
 				this.timer = setTimeout(() => {

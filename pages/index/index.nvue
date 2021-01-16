@@ -1,12 +1,12 @@
 <template>
 	<div class="container" :style="{height: phoneHeight}">
-		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
+		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
 		<div id="content" class="content">
-			<TheNav></TheNav>
+			<TheNav :sourceData="taskList"></TheNav>
 			<div class="detail">
 				<UserInfo></UserInfo>
-				<LeisureStatus></LeisureStatus>
-				<BusyStatus></BusyStatus>
+				<BusyStatus :sourceData="pageData" @perform="handlePerform" v-if="alarm.status === 3"></BusyStatus>
+				<LeisureStatus :sourceData="pageData" v-else></LeisureStatus>
 			</div>
 		</div>
 	</div>
@@ -18,6 +18,8 @@
 	import BusyStatus from "./BusyStatus";
 	import TheNav from "./TheNav";
 	import TheMap from "@/components/TheMap";
+	import { getHomeInfo } from "@/api/public";
+	import { getTask } from "@/api/task";
 
 	export default {
 		components: {
@@ -32,7 +34,31 @@
 				nowMapIndex: true,
 				phoneHeight: 0, //屏幕高
 				phoneWidth: 0, // 屏幕宽
-				contentHeight: 0
+				contentHeight: 0,
+				pageData: {},
+				taskList: []
+			}
+		},
+		computed:{
+			alarm() {
+				let obj = Object.create(null);
+				const { alarm } = this.pageData;
+				if (alarm != null && typeof alarm === "object") {
+					obj = alarm;
+				}
+				return obj;
+			},
+			// map高度
+			mapHeight() {
+				return this.phoneHeight - this.contentHeight;
+			},
+			destination(){
+				let result = Object.create(null);
+				if (Object.keys(this.alarm).length) {
+					const { longitude, latitude } = this.alarm;
+					result = { longitude, latitude }
+				}
+				return result;
 			}
 		},
 		onReady() {
@@ -44,16 +70,50 @@
 				}
 			});
 		},
+		onShow() {
+			this.getPageData();
+			this.getTaskList();
+		},
 		mounted() {
 			this.setContentHeight();
 		},
-		computed: {
-			// map高度
-			mapHeight() {
-				return this.phoneHeight - this.contentHeight;
-			}
-		},
 		methods: {
+			async getPageData(){
+				uni.showLoading({
+				    title: '加载中'
+				});
+				try{
+					const result = await getHomeInfo();
+					this.pageData = result;
+				}catch(error){
+					uni.showToast({
+					    title: error.message,
+						icon: "none", 
+					    duration: 2000
+					});
+				}
+				uni.hideLoading();
+			},
+			async getTaskList(){
+				uni.showLoading({
+				    title: '加载中'
+				});
+				try{
+					const result = await getTask();
+					this.taskList = result;
+				}catch(error){
+					uni.showToast({
+					    title: error.message,
+						icon: "none", 
+					    duration: 2000
+					});
+				}
+				uni.hideLoading();
+			},
+			handlePerform(){
+				this.getPageData();
+				this.getTaskList();
+			},
 			// 计算内容高度
 			setContentHeight() {
 				const query = uni.createSelectorQuery().in(this);

@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<u-navbar z-index="1" title="上报警情"></u-navbar>
-		<u-cell-item title="警情位置" value="当前位置"></u-cell-item>
+		<u-cell-item title="警情位置" :value="address.name" @click="handleChosenPosition "></u-cell-item>
 		<u-cell-item title="警情类型" :value="typeText" @tap="selectShow = true">
 			<u-select
 				slot="right-icon"
@@ -30,19 +30,14 @@
 		</view>
 		<view class="btn mg" blue @tap="handleUpload">上报警情</view>
 		<u-toast ref="uToast" />
-		<SearchSite></SearchSite>
 	</view>
 </template>
 
 <script>
 	import config from "@/config";
 	import * as api from "@/api/task";
-	import SearchSite from "./SearchSite";
 	export default {
 		name: "update-task",
-		components:{
-			SearchSite
-		},
 		data() {
 			return {
 				uploadAction: `${config.BASE_URL}/file/upload`,
@@ -51,6 +46,7 @@
 				describe: "",
 				selectShow: false,
 				typeValue: {},
+				address: {},
 				typeOptions: [
 					{
 						label: '交通拥堵',
@@ -89,10 +85,25 @@
 				return text;
 			}
 		},
-		mounted() {
+		onShow() {
 			this.typeValue = this.typeOptions[0];
+			uni.getLocation({
+				geocode: true,
+				success: res => {
+					const { latitude, longitude } = res;
+					this.address = { longitude, latitude, name: "当前位置" }
+				}
+			})
 		},
 		methods:{
+			handleChosenPosition(){
+				uni.chooseLocation({
+					success: (res) => {
+						const { longitude, latitude, name } = res;
+						this.address = { longitude, latitude, name };
+					}
+				})
+			},
 			handleTypeChange(args){
 				this.typeValue = args[0];
 			},
@@ -105,6 +116,7 @@
 				this.fileList.splice(index, 1);
 			},
 			async handleUpload(){
+				const { longitude, latitude, name } = this.address;
 				if (!this.describe) {
 					this.$u.toast('请填写详细的描述');
 					return
@@ -116,10 +128,10 @@
 				try{
 					await api.uploadTask({
 						alarmClass: this.typeValue.value,
-						caseAddr: "测试警情地址",
+						caseAddr: name,
 						content: this.describe,
-						lat: 0,
-						lng: 0,
+						lat: latitude,
+						lng: longitude,
 						pictures: this.fileList
 					});
 					uni.redirectTo({url: "/pages/index/index"});
@@ -130,7 +142,6 @@
 						type: 'error'
 					})
 				}
-				console.log('提交')
 			}
 		}
 	}

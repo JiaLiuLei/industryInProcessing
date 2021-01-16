@@ -65,9 +65,6 @@
 					const { longitude, latitude } = res;
 					this.longitude = longitude;
 					this.latitude = latitude;
-					if (this.targetMarker) {
-						this.markers = [this.targetMarker];
-					}
 				}
 			});
 		},
@@ -85,6 +82,11 @@
 					longitude: this.longitude,
 					latitude: this.latitude
 				});
+			}
+		},
+		watch:{
+			destination(val){
+				this.markers = [this.targetMarker];
 			}
 		}
 	}

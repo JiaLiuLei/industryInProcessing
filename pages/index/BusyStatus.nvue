@@ -3,22 +3,22 @@
 		<div class="car">
 			<div>
 				<div class="mileage-detail">
-					<text class="big-number">284</text><text class="unit">Km</text>
+					<text class="big-number">{{alarm.todayPatrolDistance || 0}}</text><text class="unit">Km</text>
 				</div>
 				<text class="text">今日累计巡逻里程</text>
 			</div>
 			<div class="card">
-				<text class="card-text">渝·A0008</text><text class="card-text tangerine">警</text>
+				<text class="card-text">渝·{{ plateNumber }}</text><text class="card-text tangerine">警</text>
 			</div>
 		</div>
 		<div class="task">
 			<div>
 				<div class="task-detail">
-					<text class="small-number">27</text><text class="text">起</text>
+					<text class="small-number">{{alarm.totalHandleAlarm || 0}}</text><text class="text">起</text>
 				</div>
 				<text class="text">警情处置数</text>
 			</div>
-			<WorkStatus></WorkStatus>
+			<WorkStatus :status="alarm.status"></WorkStatus>
 		</div>
 		<div class="task-info">
 			<div class="card-box">
@@ -28,36 +28,80 @@
 						<text class="name">周警官</text>
 					</div>
 					<div class="call-box">
-						<text class="call">联系报警人</text>
+						<text class="call" @click="handlePhoneCall(alarm.alarmPersonPhone)">联系报警人</text>
 						<image class="arrow" src="../../static/icon-arrow.png"></image>
 					</div>
 				</div>
-				<text class="user-task-detail">刚才红旗河沟立交自西向东路口发生擦刮纠纷</text>
+				<text class="user-task-detail">{{alarm.content}}</text>
 			</div>
 		</div>
-		<TheSlider class="slider"></TheSlider>
-		<!-- <div class="slider">
-			<movable-area class="slider-box">
-				<movable-view
-					direction="horizontal"
-					@change="handleSliderBlockChange"
-					class="slider-block">1111</movable-view>
-			</movable-area>
-		</div> -->
+		<TheSlider class="slider" @success="handlePerform"></TheSlider>
 	</div>
 </template>
 
 <script>
 	import WorkStatus from "./WorkStatus";
 	import TheSlider from "@/components/Theslider";
+	import { updateTaskStatus } from "@/api/task";
 	export default {
+		props:{
+			sourceData: Object
+		},
 		components: {
 			WorkStatus,
 			TheSlider
 		},
+		computed:{
+			alarm() {
+				let obj = Object.create(null);
+				const { alarm } = this.sourceData;
+				if (alarm != null && typeof alarm === "object") {
+					obj = alarm;
+				}
+				return obj;
+			},
+			bindCard() {
+				let arr = [];
+				const { bindCard } = this.sourceData;
+				if (Array.isArray(bindCard)) {
+					arr = bindCard;
+				}
+				return arr;
+			},
+			plateNumber() {
+				let number = 0;
+				if (this.bindCard.length) {
+					const { no = "" } = this.bindCard[0];
+					number = no.substring(1, no.length - 1);
+				}
+				return number;
+			}
+		},
 		methods:{
-			handleSliderBlockChange(){
-				console.log(1)
+			handlePhoneCall(number){
+				uni.makePhoneCall({
+				    phoneNumber: number
+				});
+			},
+			async handlePerform(){
+				uni.showLoading({
+				    title: '加载中'
+				});
+				const { id, status } = this.alarm;
+				try{
+					await updateTaskStatus({
+						jqId: id,
+						status: status
+					});
+					this.$emit("perform");
+				}catch(error){
+					uni.showToast({
+					    title: error.message,
+						icon: "none", 
+					    duration: 2000
+					});
+				}
+				uni.hideLoading();
 			}
 		}
 	}

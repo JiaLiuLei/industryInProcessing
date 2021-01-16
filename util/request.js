@@ -24,13 +24,13 @@ const request = (url, options) => {
 					uni.removeStorage({
 						key: 'token',
 						success: function () {
-							uni.navigateTo({
+							uni.reLaunch({
 							    url: '/pages/login/index'
 							});
 						}
 					});
 				} else {
-					uni.navigateTo({
+					uni.reLaunch({
 					    url: '/pages/login/index'
 					});
 				}
