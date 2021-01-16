@@ -1,0 +1,110 @@
+<template>
+	<div class="container">
+		<map
+			id="map"
+			ref="map"
+			class="map"
+			:longitude="longitude"
+			:latitude="latitude"
+			:style="{ height, width }"
+			:markers="markers"
+			:include-points="includePoints"
+			:scale="13"
+			enable-traffic
+			show-location>
+		</map>
+		<div class="controls">
+			<div class="refresh" @click="handleReresh">
+				<image class="icon" src="/static/icon-refresh.png"></image>
+			</div>
+			<div class="location" @click="handleBackLocation">
+				<image class="icon" src="/static/icon-position.png"></image>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		name: "map",
+		props:{
+			height: [Number || String],
+			width: [Number || String],
+			destination: Object
+		},
+		data() {
+			return {
+				longitude: 0,
+				latitude: 0,
+				markers: [],
+				includePoints: []
+			}
+		},
+		computed:{
+			targetMarker() {
+				let result = Object.create(null);
+				if (this.destination && Object.keys(this.destination).length) {
+					const {latitude, longitude} = this.destination;
+					result = {
+						id: 1,
+						latitude,
+						longitude,
+						iconPath: "/static/icon-position-target.png",
+						width: 44,
+						height: 50
+					}
+				}
+				return result;
+			}
+		},
+		mounted() {
+			uni.getLocation({
+				type: "gcj02",
+				success: res => {
+					const { longitude, latitude } = res;
+					this.longitude = longitude;
+					this.latitude = latitude;
+					if (this.targetMarker) {
+						this.markers = [this.targetMarker];
+					}
+				}
+			});
+		},
+		methods:{
+			handleReresh() {
+				if (this.targetMarker) {
+					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}, this.targetMarker];
+				} else {
+					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}];
+				}
+			},
+			handleBackLocation() {
+				const map = uni.createMapContext('map',this);
+				map.moveToLocation({
+					longitude: this.longitude,
+					latitude: this.latitude
+				});
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+.controls{
+	position: absolute;
+	bottom: 40rpx;
+	right: 25rpx;
+	
+}
+.refresh, .location{
+	margin-bottom: 20rpx;
+	padding: 13rpx;
+	border-radius: 8rpx;
+	background-color: #fff;
+}
+.icon{
+	width: 48rpx;
+	height: 48rpx;
+}
+
+</style>

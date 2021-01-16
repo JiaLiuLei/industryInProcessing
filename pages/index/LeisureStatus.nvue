@@ -1,0 +1,34 @@
+<template>
+	<div class="container">
+		<div class="info">
+			<div class="mileage">
+				<div class="mileage-detail">
+					<text class="number">284</text><text class="unit">Km</text>
+				</div>
+				<text class="text">今日累计巡逻里程</text>
+			</div>
+			<div class="task"></div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style scoped>
+.info{
+	flex-direction: row;
+	justify-content: space-between;
+}
+.mileage-detail{
+	flex-direction: row;
+}
+.text{
+	font-size: 24rpx;
+	color: #6C6F7B;
+}
+
+</style>

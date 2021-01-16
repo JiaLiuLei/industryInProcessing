@@ -4,7 +4,7 @@
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template  v-if="activeIndex !== 3">
 			<view class="map">
-				<AMap :targetPosition="targetPosition"></AMap>
+				<!-- <AMap :targetPosition="targetPosition"></AMap> -->
 			</view>
 			<view class="cell">
 				<text>警情位置</text>
@@ -69,7 +69,7 @@
 <script>
 	import StepNav from "./StepNav.vue";
 	import CardInfo from "./CardInfo.vue";
-	import AMap from "@/components/AMap.vue";
+	// import AMap from "@/components/AMap.vue";
 	import * as api from "@/api/task";
 	import config from "@/config";
 	export default {
@@ -77,7 +77,7 @@
 		components: {
 			StepNav,
 			CardInfo,
-			AMap
+			// AMap
 		},
 		data() {
 			return {

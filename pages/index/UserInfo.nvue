@@ -1,0 +1,35 @@
+<template>
+	<div class="container">
+		<image class="icon" src="/static/icon-via-default.png"></image>
+		<text class="name">周警官</text>
+		<text class="tip">下午好，欢迎使用交巡警智能管理平台</text>
+	</div>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style scoped>
+.container{
+	flex-direction: row;
+	align-items: center;
+}
+.icon{
+	width: 64rpx;
+	height: 64rpx;
+}
+.name{
+	margin-left: 20rpx;
+	font-size: 36rpx;
+	color: #fff;
+}
+.tip{
+	flex: 1;
+	text-align: right;
+	font-size: 24rpx;
+	color: #BDC1CC;
+}
+</style>

@@ -1,0 +1,137 @@
+<template>
+	<div class="test">
+		<slider value="60" :block-size="28" @change="sliderChange" step="5" />
+		<text class="text">凯撒劳动纠纷看逻辑撒地方凯撒劳动纠纷看逻辑撒地方凯撒劳动纠纷看逻辑撒地方凯撒劳动纠纷看逻辑撒地方</text>
+		<!-- <u-upload :action="action" :file-list="fileList"></u-upload> -->
+		<!-- <div class="item"></div> -->
+		<!-- <view class="sunui">
+			<view class="sunui-title">右滑拖动验证</view> -->
+		<!-- <sunui-mverify @change="mverify"></sunui-mverify> -->
+		<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
+		<!-- </view> -->
+		<movable-area>
+			<movable-view>111</movable-view>
+		</movable-area>
+		<!-- <map id="map" style="width: 100%; height: 300px;" show-location @controltap="controltap" :controls="controls" :latitude="latitude" :longitude="longitude" :include-points="points" :markers="covers"></map> -->
+	</div>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				action: 'http://www.example.com/upload',
+				fileList: [{
+					url: 'http://pics.sc.chinaz.com/files/pic/pic9/201912/hpic1886.jpg',
+				}],
+				id: 0, // 使用 marker点击事件 需要填写id
+				title: 'map',
+				latitude: 39.909,
+				longitude: 116.39742,
+				points: [],
+				covers: [{
+					latitude: 39.909,
+					longitude: 116.39742,
+					iconPath: '../../static/icon-position-target.png',
+					width: 44,
+					height: 50
+				}, {
+					latitude: 39.90,
+					longitude: 115.39,
+					iconPath: '../../../static/location.png'
+				}],
+				controls: [{
+					id: 1,
+					position: {
+						left: 300,
+						top: 100,
+						width: 30,
+						height: 30
+					},
+					iconPath: '../../static/icon-position-current.png',
+					clickable: true
+				}],
+				mapContext: null
+			}
+		},
+		onShow() {
+			this.mapContext = uni.createMapContext('map');
+			plus.geolocation.watchPosition((p) => {
+				// this.latitude = p.coords.latitude;
+				// this.longitude = p.coords.longitude;
+				// this.covers = [
+				// 	{
+				// 		latitude: p.coords.latitude,
+				// 		longitude: p.coords.longitude,
+				// 		iconPath: '../../static/icon-position-current.png',
+				// 		width: 44,
+				// 		height: 50
+				// 	}
+				// ]
+			});
+		},
+		methods: {
+			verifyResult(res) {
+				console.log(res);
+				this.resultData = res;
+			},
+			mverify(e) {
+				console.log('验证结果:', e);
+			},
+			sliderChange(e) {
+				console.log('value 发生变化：' + e.detail.value)
+			},
+			hh() {
+				console.log(111)
+			},
+			controltap(e) {
+				// console.log(this.$refs)
+				// console.log(e.detail);
+				// this.latitude = 39.90;
+				// this.longitude = 115.39;
+				this.points = [{
+					latitude: 39.909,
+					longitude: 116.39742,
+				}]
+				// plus.nativeUI.toast(222);
+				// this.$forceUpdate()
+				// console.log(this.mapContext.$getAppMap);
+				// this.mapContext.$getAppMap.setCenter(new plus.maps.Point( 115.39, 39.90 ));
+			}
+		}
+	}
+</script>
+
+<style>
+	.test {
+		flex: 1;
+		flex-direction: column;
+		width: 750rpx;
+		height: 1334rpx;
+		/* padding: 100rpx 50rpx; */
+		background-color: #2C405A;
+	}
+
+	.item {
+		flex: 1;
+		background-color: #4CD964;
+	}
+
+	.aa {
+		position: absolute;
+		top: 100rpx;
+		right: 50rpx;
+	}
+
+	.text {
+
+		background-color: #007AFF;
+		border-radius: 10rpx;
+		padding: 60rpx;
+	}
+
+	.map {
+		width: 750rpx;
+		height: 800rpx;
+	}
+</style>
