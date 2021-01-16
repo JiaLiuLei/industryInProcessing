@@ -1,21 +1,21 @@
 <template>
 	<div class="container">
-		<view :class="['item', { active: active >= 0 }]">
+		<view :class="['item', (active >= 0 ? 'active' : '')]">
 			<image src="../../static/icon-step-1.png" class="img" mode="aspectFit"></image>
 			<text class="text">接受警情</text>
 		</view>
 		<view class="space-box"><image class="space" src="../../static/icon-step-space.png"></image></view>
-		<view :class="['item', { active: active >= 1 }]">
+		<view :class="['item', (active >= 1 ? 'active' : '')]">
 			<image src="../../static/icon-step-2.png" class="img" mode="aspectFit"></image>
 			<text class="text">前往处理</text>
 		</view>
 		<view class="space-box"><image class="space" src="../../static/icon-step-space.png"></image></view>
-		<view :class="['item', { active: active >= 2 }]">
+		<view :class="['item', (active >= 2 ? 'active' : '')]">
 			<image src="../../static/icon-step-3.png" class="img" mode="aspectFit"></image>
 			<text class="text">完成警情</text>
 		</view>
 		<view class="space-box"><image class="space" src="../../static/icon-step-space.png"></image></view>
-		<view :class="['item', { active: active >= 3 }]">
+		<view :class="['item', (active >= 3 ? 'active' : '')]">
 			<image src="../../static/icon-step-4.png" class="img" mode="aspectFit"></image>
 			<text class="text">填写回执</text>
 		</view>
@@ -30,6 +30,9 @@
 				type: Number,
 				default: 0
 			}
+		},
+		mounted(){
+			// console.log(this.active)
 		}
 	}
 </script>

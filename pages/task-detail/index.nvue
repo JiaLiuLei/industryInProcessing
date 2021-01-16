@@ -1,11 +1,10 @@
 <template>
 	<div class="container">
 		<StepNav :active="activeIndex"></StepNav>
-		<!-- <CardInfo :sourceData="cardData"></CardInfo> -->
-		<CardInfo></CardInfo>
-		<template v-if="!activeIndex">
+		<CardInfo :sourceData="cardData"></CardInfo>
+		<template v-if="activeIndex !== 3">
 			<view class="map">
-				<TheMap class="mapstyle" :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
+				<TheMap class="mapstyle" :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -16,27 +15,12 @@
 				<text class="msg">{{pageData.createTime}}</text>
 			</view>
 		</template>
-		<template v-if="!activeIndex">
+		<template v-if="activeIndex === 1">
 			<view class="btn mg blue" @click="handleImmediateProcessing(pageData.id, pageData.status)"><text class="btn-text cfff">立即处理</text></view>
 			<view class="btn mg-t30" @click="handleLaterProcessing"><text class="btn-text">稍后处理</text></view>
 		</template>
 		<template v-if="activeIndex === 2">
-			<!-- <u-slider
-				v-model="sliderValue"
-				min="9"
-				max="94"
-				inactive-color="#F5F5F5"
-				active-color="#8FFF43"
-				height="120"
-				:use-slot="true"
-				@tap.native="handleSliderClick"
-				@end="handleSliderEnd">
-				<view>
-					<view class="badge">
-						<view class="icon"></view>
-					</view>
-				</view>
-			</u-slider> -->
+			<TheSlider class="slider" bgColor="#F5F5F5" @success="handleSliderEnd"></TheSlider>
 		</template>
 		<template v-if="activeIndex === 3">
 			<view class="update">
@@ -57,6 +41,7 @@
 	import StepNav from "./StepNav.nvue";
 	import CardInfo from "./CardInfo.nvue";
 	import TheMap from "@/components/TheMap";
+	import TheSlider from "@/components/Theslider";
 	import * as api from "@/api/task";
 	import config from "@/config";
 	export default {
@@ -64,24 +49,20 @@
 		components: {
 			StepNav,
 			CardInfo,
-			TheMap
+			TheMap,
+			TheSlider
 		},
 		data() {
 			return {
+				appkey: config.APP_KEY,
 				activeIndex: 3,
-				sliderValue: 9,
-				pageData: {
-					caseAddr: '红旗河沟立交桥武装检查站',
-					createTime: '2020/11/12 12:32'
-				},
+				pageData: {},
 				finished: true,
 				id: "",
 				receiptContent: "",
 				uploadAction: `${config.BASE_URL}/file/upload`,
 				fileList: [],
-				appkey: config.APP_KEY,
-				imgFile: [],
-				uploadFileRes: []
+				imgFile: []
 			}
 		},
 		computed: {
@@ -98,19 +79,11 @@
 				}
 			},
 			targetPosition() {
-				let target = [];
-				try {
-					const {
-						lng,
-						lat
-					} = this.pageData;
-					if (lng && lat) {
-						target = [lng, lat];
-					}
-				} catch {
-					target = []
-				}
-				return target;
+				const {
+					lng,
+					lat
+				} = this.pageData;
+				return { longitude:lng, latitude:lat };
 			}
 		},
 		onLoad(params) {
@@ -133,28 +106,43 @@
 			// 上传回执
 			async handleUploadReceipt() {
 				if (!this.receiptContent) {
-					this.$u.toast('请填写回执说明内容');
+					uni.showToast({
+					    title: '请填写回执说明内容',
+					    duration: 2000,
+						icon: 'none'
+					});
 					return
 				}
 				if (!this.fileList.length) {
-					this.$u.toast('请上传图片');
+					uni.showToast({
+					    title: '请上传图片',
+					    duration: 2000,
+						icon: 'none'
+					});
 					return
 				}
+				uni.showLoading({
+				    title: '提交中...'
+				});
 				try {
-					await api.uploadReceipt({
+					const result = await api.uploadReceipt({
 						jqId: this.pageData.id,
 						feedbackContent: this.receiptContent,
 						feedbackUrls: this.fileList
 					});
+					console.log(result);
+					uni.hideLoading()
 					this.handleLaterProcessing();
 				} catch (error) {
+					uni.hideLoading();
 					const {
 						message
 					} = error;
-					this.$refs.uToast.show({
-						title: message,
-						type: 'error'
-					})
+					uni.showToast({
+					    title: message,
+					    duration: 2000,
+						icon: 'none'
+					});
 				}
 			},
 			async getPageData(id) {
@@ -163,42 +151,39 @@
 						jqId: id
 					});
 					this.pageData = result;
+					console.log(this.pageData)
 					this.changeNavIndex(result.status);
 				} catch (error) {
 					const {
 						message
 					} = error;
-					this.$refs.uToast.show({
-						title: message,
-						type: 'error'
-					})
+					uni.showToast({
+					    title: message,
+					    duration: 2000,
+						icon: 'none'
+					});
 				}
 			},
 			// 右滑完成当前警情
 			async handleSliderEnd() {
-				if (this.sliderValue < 94) {
-					this.sliderValue = 9;
-				} else {
-					const {
-						id,
+				uni.showLoading({
+					title: '加载中'
+				});
+				const { id, status } = this.pageData;
+				try{
+					await api.updateTaskStatus({
+						jqId: id,
 						status
-					} = this.pageData;
-					try {
-						await api.updateTaskStatus({
-							jqId: id,
-							status
-						});
-						this.getPageData(this.id);
-					} catch (error) {
-						const {
-							message
-						} = error;
-						this.$refs.uToast.show({
-							title: message,
-							type: 'error'
-						})
-					}
+					});
+					this.getPageData(this.id);
+				}catch(error){
+					uni.showToast({
+						title: error.message,
+						icon: "none", 
+						duration: 2000
+					});
 				}
+				uni.hideLoading();
 			},
 			changeNavIndex(status) {
 				let index = 1;
@@ -214,9 +199,7 @@
 						break;
 				}
 				this.activeIndex = index;
-			},
-			handleSliderClick() {
-				this.sliderValue = 9;
+				// console.log(this.activeIndex)
 			},
 			handleLaterProcessing() {
 				uni.navigateBack();
@@ -230,15 +213,18 @@
 					await api.dealWithTask({
 						jqId: id
 					});
-					uni.navigateTo('/pages/index/index');
+					uni.reLaunch({
+					    url: '/pages/index/index'
+					});
 				} catch (error) {
 					const {
 						message
 					} = error;
-					this.$refs.uToast.show({
-						title: message,
-						type: 'error'
-					})
+					uni.showToast({
+					    title: message,
+					    duration: 2000,
+						icon: 'none'
+					});
 				}
 				this.finished = true;
 			},
@@ -264,9 +250,12 @@
 							this.imgFile.push(...temps);
 							console.log(this.imgFile);
 							//上传图片
+							uni.showLoading({
+							    title: '上传中...'
+							});
 							for(let i=0; i<temps.length; i++){
 								uni.uploadFile({
-									url: uploadAction,
+									url: this.uploadAction,
 									filePath: temps[i],
 									name: 'file',
 									formData: {
@@ -275,10 +264,10 @@
 									},
 									header: {appkey: this.appkey},
 									success: (uploadFileRes) => {
-										console.log(uploadFileRes.data);
-										let res = uploadFileRes.data;
+										// console.log(uploadFileRes.data);
+										let res = JSON.parse(uploadFileRes.data);
 										if(res.code == 200){
-											this.uploadFileRes.push(res.data.attachPath);
+											this.fileList.push(res.data.attachPath);
 										} else{
 											uni.showToast({
 											    title: '图片上传失败',
@@ -287,6 +276,7 @@
 											});
 											this.imgFile = this.imgFile.filter((item, index) => index !== i);
 										}
+										if(i + 1 == temps.length) uni.hideLoading();
 									}
 								});
 							}
@@ -313,11 +303,7 @@
 			deleteImg(idx){
 				//删除图片
 				this.imgFile = this.imgFile.filter((item, index) => index !== idx);
-				this.uploadFileRes = this.uploadFileRes.filter((item, index) => index !== idx);
-			},
-			uploadImg(){
-				// 上传图片
-				
+				this.fileList = this.fileList.filter((item, index) => index !== idx);
 			}
 		}
 	}
@@ -358,6 +344,9 @@
 	.msg{
 		font-size: 32rpx;
 		color: #424758;
+	}
+	.slider{
+		margin-top: 300rpx;
 	}
 	.btn{
 		height: 100rpx;
