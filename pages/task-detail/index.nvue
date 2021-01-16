@@ -4,7 +4,7 @@
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template v-if="activeIndex !== 3">
 			<view class="map">
-				<TheMap class="mapstyle" :destination="{longitude: 121.342332 , latitude: 31.23776}"></TheMap>
+				<TheMap class="mapstyle" :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -79,19 +79,11 @@
 				}
 			},
 			targetPosition() {
-				let target = [];
-				try {
-					const {
-						lng,
-						lat
-					} = this.pageData;
-					if (lng && lat) {
-						target = [lng, lat];
-					}
-				} catch {
-					target = []
-				}
-				return target;
+				const {
+					lng,
+					lat
+				} = this.pageData;
+				return { longitude:lng, latitude:lat };
 			}
 		},
 		onLoad(params) {
