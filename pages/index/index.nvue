@@ -1,6 +1,6 @@
 <template>
 	<div class="container" :style="{height: phoneHeight}">
-		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
+		<TheMap v-if="showMap" :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
 		<div id="content" class="content">
 			<TheNav :total="taskListTotal"></TheNav>
 			<div class="detail">
@@ -40,6 +40,13 @@
 			}
 		},
 		computed:{
+			showMap(){
+				let status = false;
+				if (Object.keys(this.pageData).length) {
+					status = true;
+				}
+				return status;
+			},
 			alarm() {
 				let obj = Object.create(null);
 				const { alarm } = this.pageData;

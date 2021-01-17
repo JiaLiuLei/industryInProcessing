@@ -4,11 +4,8 @@
 			id="map"
 			ref="map"
 			class="map"
-			:longitude="longitude"
-			:latitude="latitude"
 			:style="{ height, width }"
 			:markers="markers"
-			:include-points="includePoints"
 			enable-traffic
 			show-location>
 		</map>
@@ -37,15 +34,67 @@
 				longitude: 0,
 				latitude: 0,
 				markers: [],
-				includePoints: []
+				includePoints: [],
+				map: null
 			}
 		},
-		computed:{
-			targetMarker() {
-				let result = Object.create(null);
-				if (this.destination && Object.keys(this.destination).length) {
-					const {latitude, longitude} = this.destination;
-					result = {
+		mounted() {
+			this.map = uni.createMapContext("map", this);
+			
+			uni.getLocation({
+				type: "gcj02",
+				success: res => {
+					const { longitude, latitude } = res;
+					
+					this.longitude = longitude;
+					this.latitude = latitude;
+					
+					if (this.destination && Object.keys(this.destination).length) {
+						const { longitude: tlon, latitude: tlat } = this.destination;
+						
+						// 警情标点
+						this.setTargetMarker(tlon, tlat);
+						
+						const points = [
+							{longitude, latitude},
+							{longitude: tlon, latitude: tlat}
+						];
+						
+						this.includePoints = points;
+						
+						this.map.includePoints({
+							padding: [100, 80, 100, 80],
+							points,
+							fail:() => {
+								this.map.moveToLocation({
+									longitude, latitude
+								});
+							}
+						});
+					} else {
+						this.map.moveToLocation({
+							longitude, latitude
+						});
+					}
+				}
+			});
+		},
+		methods:{
+			handleReresh() {
+				this.map.includePoints({
+					padding: [100, 80, 100, 80],
+					points: this.includePoints
+				});
+			},
+			handleBackLocation() {
+				this.map.moveToLocation({
+					longitude: this.longitude,
+					latitude: this.latitude
+				});
+			},
+			setTargetMarker(longitude, latitude){
+				this.markers = [
+					{
 						id: 1,
 						latitude,
 						longitude,
@@ -53,36 +102,7 @@
 						width: 44,
 						height: 50
 					}
-				}
-				return result;
-			}
-		},
-		mounted() {
-			uni.getLocation({
-				type: "gcj02",
-				success: res => {
-					const { longitude, latitude } = res;
-					this.longitude = longitude;
-					this.latitude = latitude;
-					this.markers = [this.targetMarker];
-					this.handleReresh();
-				}
-			});
-		},
-		methods:{
-			handleReresh() {
-				if (this.targetMarker && Object.keys(this.targetMarker).length > 0) {
-					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}, this.targetMarker];
-				} else {
-					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}];
-				}
-			},
-			handleBackLocation() {
-				const map = uni.createMapContext('map',this);
-				map.moveToLocation({
-					longitude: this.longitude,
-					latitude: this.latitude
-				});
+				]
 			}
 		}
 	}
