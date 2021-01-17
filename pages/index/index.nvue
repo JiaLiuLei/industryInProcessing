@@ -2,7 +2,7 @@
 	<div class="container" :style="{height: phoneHeight}">
 		<TheMap :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
 		<div id="content" class="content">
-			<TheNav :sourceData="taskList"></TheNav>
+			<TheNav :total="taskListTotal"></TheNav>
 			<div class="detail">
 				<UserInfo></UserInfo>
 				<BusyStatus :sourceData="pageData" @perform="handlePerform" v-if="alarm.status === 3"></BusyStatus>
@@ -36,7 +36,7 @@
 				phoneWidth: 0, // 屏幕宽
 				contentHeight: 0,
 				pageData: {},
-				taskList: []
+				taskListTotal: 0
 			}
 		},
 		computed:{
@@ -100,15 +100,14 @@
 				    title: '加载中'
 				});
 				try{
-					const result = await getTask({status: 3});
-					this.taskList = result;
-				}catch{
-					
-					// uni.showToast({
-					//     title: error.message,
-					// 	icon: "none", 
-					//     duration: 2000
-					// });
+					const result = await getTask({status: 2});
+					this.taskListTotal = result.total;
+				}catch(error){
+					uni.showToast({
+					    title: error.message,
+						icon: "none", 
+					    duration: 2000
+					});
 				}
 				uni.hideLoading();
 			},

@@ -5,8 +5,8 @@
 		</view>
 		<!-- 待处理 -->
 		<view class="item" v-show="current === 0">
-			<template v-if="unconfirmedTask.length">
-				<view class="card" v-for="item in unconfirmedTask" :key="item.id">
+			<template v-if="unconfirmedTask.total">
+				<view class="card" v-for="item in unconfirmedTask.list" :key="item.id">
 					<view class="title">
 						<view class="user">
 							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
@@ -27,8 +27,8 @@
 		</view>
 		<!-- 处理中 -->
 		<view class="item" v-show="current === 1">
-			<template v-if="inProgressTask.length">
-				<view class="card" v-for="item in inProgressTask" :key="item.id">
+			<template v-if="inProgressTask.total">
+				<view class="card" v-for="item in inProgressTask.list" :key="item.id">
 					<view class="title">
 						<view class="user">
 							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
@@ -49,8 +49,8 @@
 		</view>
 		<!-- 待回执 -->
 		<view class="item" v-show="current === 2">
-			<template v-if="completedTask.length">
-				<view class="card" v-for="item in completedTask" :key="item.id">
+			<template v-if="completedTask.total">
+				<view class="card" v-for="item in completedTask.list" :key="item.id">
 					<view class="title">
 						<view class="user">
 							<u-image width="48rpx" height="48rpx" class="via" src="../../static/icon-via-default.png" shape="circle"></u-image>
@@ -78,9 +78,9 @@
 	export default {
 		data() {
 			return {
-				unconfirmedTask: [],
-				inProgressTask: [],
-				completedTask: [],
+				unconfirmedTask: {total: 0, list: []},
+				inProgressTask: {total: 0, list: []},
+				completedTask: {total: 0, list: []},
 				category: [
 					{
 						name: "待处理"
@@ -92,11 +92,24 @@
 						name: "已完成"
 					}
 				],
-				current: 0
+				current: 0,
+				currentPage: 1,
+				size: 20,
+				loading: false
 			}
 		},
-		onLoad(){
-			this.getTaskList(0);
+		onBackPress(){
+			console.log(1111)
+			this.getTaskList(this.current);
+		},
+		onShow(){
+			this.getTaskList(this.current);
+		},
+		onReachBottom(){
+			if (this.loading) {
+				this.loading = false;
+				this.getTaskList(this.current);
+			}
 		},
 		methods: {
 			handleNavigateToDetail(id){
@@ -106,6 +119,7 @@
 			},
 			handleNavChange(index) {
 				this.current = index;
+				this.currentPage = 1;
 				this.getTaskList(index);
 			},
 			async getTaskList(index) {
@@ -124,14 +138,28 @@
 						key = "completedTask"
 					break;
 				}
+				if (this[key].total && this[key]['list'].length >= this[key].total) {
+					return;
+				}
 				uni.showLoading({
 				    title: '加载中'
 				});
 				try{
-					this[key] = await getTask({status});
+					const result = await getTask({status, current: this.currentPage, size: this.size});
+					const { total, records } = result;
+					if (this.currentPage === 1) {
+						this[key] = {
+							total,
+							list: records
+						};
+					} else {
+						this[key]['list'] = [...this[key]['list'], ...records];
+					}
+					this.currentPage += 1;
 				}catch{
-					this[key] = [];
+					this[key] = {};
 				}
+				this.loading = true;
 				uni.hideLoading();
 			},
 			handlePhoneCall(number){

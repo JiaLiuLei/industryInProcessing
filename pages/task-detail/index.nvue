@@ -130,7 +130,6 @@
 						feedbackContent: this.receiptContent,
 						feedbackUrls: this.fileList
 					});
-					console.log(result);
 					uni.hideLoading()
 					this.handleLaterProcessing();
 				} catch (error) {
@@ -199,7 +198,6 @@
 						break;
 				}
 				this.activeIndex = index;
-				// console.log(this.activeIndex)
 			},
 			handleLaterProcessing() {
 				uni.navigateBack();

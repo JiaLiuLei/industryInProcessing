@@ -18,6 +18,7 @@
 			 placeholder="添加更加详细的警情描述" />
 			<view class="upload">
 				<u-upload
+					ref="upload"
 					width="195"
 					height="195"
 					:form-data="{type: 'image'}"
@@ -142,6 +143,7 @@
 					            console.log('用户点击确定');
 								// 清空图片，清空文案
 								this.fileList = [];
+								this.$refs.upload.clear();
 								this.describe = "";
 					        } else if (res.cancel) {
 					            console.log('用户点击取消');

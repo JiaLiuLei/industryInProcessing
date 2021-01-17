@@ -3,8 +3,8 @@
 		<div class="item" @click="handleToTaskList">
 			<image class="icon" src="../../static/icon-task.png"></image>
 			<text class="text">警情任务</text>
-			<div class="badge-box" v-if="sourceData.length">
-				<text class="badge">{{ sourceData.length }}</text>
+			<div class="badge-box" v-if="total">
+				<text class="badge">{{ total }}</text>
 			</div>
 		</div>
 		<div class="gap"></div>
@@ -18,7 +18,7 @@
 <script>
 	export default {
 		props: {
-			sourceData: Array
+			total: Number
 		},
 		methods: {
 			handleToTaskList() {
