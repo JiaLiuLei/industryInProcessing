@@ -74,9 +74,6 @@
 			this.getPageData();
 			this.getTaskList();
 		},
-		mounted() {
-			this.setContentHeight();
-		},
 		methods: {
 			async getPageData(){
 				uni.showLoading({
@@ -93,6 +90,10 @@
 					});
 				}
 				uni.hideLoading();
+				
+				this.$nextTick(() => {
+					this.setContentHeight();
+				})
 			},
 			async getTaskList(){
 				uni.showLoading({
