@@ -55,8 +55,8 @@
 			destination(){
 				let result = Object.create(null);
 				if (Object.keys(this.alarm).length) {
-					const { longitude, latitude } = this.alarm;
-					result = { longitude, latitude }
+					const { lng, lat } = this.alarm;
+					result = { longitude: lng, latitude: lat }
 				}
 				return result;
 			}
@@ -91,9 +91,9 @@
 				}
 				uni.hideLoading();
 				
-				this.$nextTick(() => {
-					this.setContentHeight();
-				});
+				
+				this.setContentHeight();
+
 			},
 			async getTaskList(){
 				uni.showLoading({
@@ -117,13 +117,15 @@
 			},
 			// 计算内容高度
 			setContentHeight() {
-				const query = uni.createSelectorQuery().in(this);
-				query.select('#content').boundingClientRect(data => {
-					const {
-						height
-					} = data;
-					this.contentHeight = height;
-				}).exec();
+				this.$nextTick(() =>{
+					const query = uni.createSelectorQuery().in(this);
+					query.select('#content').boundingClientRect(data => {
+						const {
+							height
+						} = data;
+						this.contentHeight = height;
+					}).exec();
+				})
 			}
 		}
 	}

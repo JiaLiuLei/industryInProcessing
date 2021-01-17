@@ -4,7 +4,7 @@
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template v-if="activeIndex !== 3">
 			<view class="map">
-				<TheMap class="mapstyle" :destination="targetPosition"></TheMap>
+				<TheMap class="mapstyle" controls :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -150,7 +150,6 @@
 						jqId: id
 					});
 					this.pageData = result;
-					console.log(this.pageData)
 					this.changeNavIndex(result.status);
 				} catch (error) {
 					const {

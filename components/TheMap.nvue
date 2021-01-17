@@ -9,7 +9,6 @@
 			:style="{ height, width }"
 			:markers="markers"
 			:include-points="includePoints"
-			:scale="13"
 			enable-traffic
 			show-location>
 		</map>
@@ -65,6 +64,8 @@
 					const { longitude, latitude } = res;
 					this.longitude = longitude;
 					this.latitude = latitude;
+					this.markers = [this.targetMarker];
+					this.handleReresh();
 				}
 			});
 		},
@@ -82,11 +83,6 @@
 					longitude: this.longitude,
 					latitude: this.latitude
 				});
-			}
-		},
-		watch:{
-			destination(val){
-				this.markers = [this.targetMarker];
 			}
 		}
 	}

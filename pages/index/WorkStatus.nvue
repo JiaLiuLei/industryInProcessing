@@ -50,7 +50,6 @@
 			uni.getStorage({
 			    key: 'storage_status',
 			    success: (res) => {
-			        console.log('工作状态：'+res.data);
 					this.storageSta = res.data;
 					if(res.data == 0){
 						this.value = res.data;
