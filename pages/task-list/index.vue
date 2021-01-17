@@ -99,7 +99,6 @@
 			}
 		},
 		onBackPress(){
-			console.log(1111)
 			this.getTaskList(this.current);
 		},
 		onShow(){

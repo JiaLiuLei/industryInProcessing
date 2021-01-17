@@ -4,7 +4,7 @@
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template v-if="activeIndex !== 3">
 			<view class="map">
-				<TheMap class="mapstyle" :destination="targetPosition"></TheMap>
+				<TheMap class="mapstyle" width="646rpx" height="296rpx" :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -83,6 +83,7 @@
 					lng,
 					lat
 				} = this.pageData;
+				console.log({longitude:lng, latitude:lat})
 				return { longitude:lng, latitude:lat };
 			}
 		},
@@ -324,10 +325,9 @@
 		overflow: hidden;
 	}
 	.mapstyle {
-		width: 650rpx;
-		height: 300rpx;
+		width: 646rpx;
+		height: 296rpx;
 		border-radius: 16rpx;
-		overflow: hidden;
 	}
 	.cell{
 		flex-direction: row;
