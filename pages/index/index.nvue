@@ -70,8 +70,8 @@
 				}
 			});
 		},
-		onShow() {
-			this.getPageData();
+		async onShow() {
+			await this.getPageData();
 			this.getTaskList();
 		},
 		methods: {
@@ -93,7 +93,7 @@
 				
 				this.$nextTick(() => {
 					this.setContentHeight();
-				})
+				});
 			},
 			async getTaskList(){
 				uni.showLoading({
