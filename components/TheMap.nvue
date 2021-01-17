@@ -81,10 +81,17 @@
 		},
 		methods:{
 			handleReresh() {
-				this.map.includePoints({
-					padding: [100, 80, 100, 80],
-					points: this.includePoints
-				});
+				if (this.includePoints.length) {
+					this.map.includePoints({
+						padding: [100, 80, 100, 80],
+						points: this.includePoints
+					});
+				} else {
+					this.map.moveToLocation({
+						longitude: this.longitude,
+						latitude: this.latitude
+					});
+				}
 			},
 			handleBackLocation() {
 				this.map.moveToLocation({
