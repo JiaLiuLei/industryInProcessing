@@ -9,7 +9,7 @@
 	<picker mode="selector" :value="value" :range="array" @change="handlePickerChange">
 		<div class="container">
 			<div class="status"></div>
-			<text class="text">{{array[value]}}</text>
+			<text class="text">{{(storageSta == 0 ? array[value] : defaultSta)}}</text>
 			<image class="arrow" src="../../static/icon-arrow.png"></image>
 		</div>
 	</picker>
@@ -25,8 +25,10 @@
 		},
 		data() {
 			return {
+				defaultSta: "请选择当前状态",
+				storageSta: 1,
 				array: ["上班", "下班"],
-				value: 0
+				value: -1
 			}
 		},
 		computed: {
@@ -43,6 +45,19 @@
 				return text;
 			}
 		},
+		mounted(){
+			// 从本地存储获取工作状态
+			uni.getStorage({
+			    key: 'storage_status',
+			    success: (res) => {
+			        console.log('工作状态：'+res.data);
+					this.storageSta = res.data;
+					if(res.data == 0){
+						this.value = res.data;
+					}
+			    }
+			});
+		},
 		methods: {
 			handlePickerChange(value) {
 				const {
@@ -51,6 +66,21 @@
 				if (detail.value !== this.value) {
 					// const workStatus = detail.value === 0 ? 2 : 1;
 					this.value = detail.value;
+					this.storageSta = this.value;
+					// 将工作状态存在本地
+					uni.setStorage({
+						key: 'storage_status',
+						data: this.value,
+						success: (res) => {
+							console.log('success: storage_status=' + this.value);
+						}
+					});
+					if(this.value == 1){
+						//退出app
+						// #ifdef APP-PLUS  
+						plus.runtime.quit();  
+						// #endif
+					}
 				}
 			}
 		}

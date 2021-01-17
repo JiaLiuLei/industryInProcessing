@@ -15,13 +15,25 @@
 					geocode: true,
 				    success: (res) => {
 						const { longitude, latitude } = res;
-						this.uploadLocation({longitude, latitude})
+						// 上班状态{0}才传定位
+						uni.getStorage({
+						    key: 'storage_status',
+						    success: (res) => {
+								this.storageSta = res.data;
+								if(res.data == 0){
+									this.uploadLocation({longitude, latitude})
+								}
+						    }
+						});
 				    }
 				});
 			}, 10000);
 			
 			
+			
 			// #ifdef APP-PLUS
+			var pinf = plus.push.getClientInfo();
+			var cid = pinf.clientid; //客户端标识
 			const _self = this;
 			const _handlePush = function(message) {
 				/**  
@@ -33,10 +45,16 @@
 			plus.push.addEventListener('click', function(message) {
 				plus.nativeUI.toast('push click');
 				_handlePush(message);
+				uni.navigateTo({
+					url: 'pages/index/index'
+				});
 			});
 			plus.push.addEventListener('receive', function(message) {
 				plus.nativeUI.toast('push receive');
 				_handlePush(message);
+				uni.navigateTo({
+					url: 'pages/index/index'
+				});
 			});
 			// #endif
 		},
@@ -52,6 +70,7 @@
 						}
 					]
 				}
+				// console.log(params)
 				try{
 					const result = await api.uploadLocation(params);
 				}catch(error){

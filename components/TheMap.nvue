@@ -70,7 +70,7 @@
 		},
 		methods:{
 			handleReresh() {
-				if (this.targetMarker) {
+				if (this.targetMarker && Object.keys(this.targetMarker).length > 0) {
 					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}, this.targetMarker];
 				} else {
 					this.includePoints = [{longitude:this.longitude, latitude: this.latitude}];

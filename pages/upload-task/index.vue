@@ -134,7 +134,21 @@
 						lng: longitude,
 						pictures: this.fileList
 					});
-					uni.redirectTo({url: "/pages/index/index"});
+					uni.showModal({
+					    title: '提交成功',
+					    content: '是否继续上报？',
+					    success: (res) => {
+					        if (res.confirm) {
+					            console.log('用户点击确定');
+								// 清空图片，清空文案
+								this.fileList = [];
+								this.describe = "";
+					        } else if (res.cancel) {
+					            console.log('用户点击取消');
+								uni.redirectTo({url: "/pages/index/index"});
+					        }
+					    }
+					});
 				}catch(error){
 					const { message } = error;
 					this.$refs.uToast.show({
