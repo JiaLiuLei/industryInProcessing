@@ -124,13 +124,15 @@
 						key = "completedTask"
 					break;
 				}
-				console.log(this[key])
+				uni.showLoading({
+				    title: '加载中'
+				});
 				try{
 					this[key] = await getTask({status});
 				}catch{
 					this[key] = [];
 				}
-				
+				uni.hideLoading();
 			},
 			handlePhoneCall(number){
 				uni.makePhoneCall({

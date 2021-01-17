@@ -2,9 +2,14 @@
 	import * as api from "@/api/public";
 	
 	export default {
+		data() {
+			return {
+				timer: null
+			}
+		},
 		onLaunch: function() {
 			// 10秒上传一次定位
-			setInterval(() => {
+			this.timer = setInterval(() => {
 				uni.getLocation({
 					type: "gcj02",
 					geocode: true,

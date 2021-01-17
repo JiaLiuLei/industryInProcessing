@@ -2,7 +2,7 @@
 	<view class="container">
 		<u-navbar z-index="1" title="上报警情"></u-navbar>
 		<u-cell-item title="警情位置" :value="address.name" @click="handleChosenPosition "></u-cell-item>
-		<u-cell-item title="警情类型" :value="typeText" @tap="selectShow = true">
+		<u-cell-item title="警情类型" :value="typeText" @click="selectShow = true">
 			<u-select
 				slot="right-icon"
 				v-model="selectShow"
@@ -28,7 +28,7 @@
 				</u-upload>
 			</view>
 		</view>
-		<view class="btn mg" blue @tap="handleUpload">上报警情</view>
+		<view class="btn mg" blue @click="handleUpload">上报警情</view>
 		<u-toast ref="uToast" />
 	</view>
 </template>
@@ -100,7 +100,7 @@
 				uni.chooseLocation({
 					success: (res) => {
 						const { longitude, latitude, name } = res;
-						this.address = { longitude, latitude, name };
+						this.address = { longitude, latitude, name: name === "地图位置" ? "当前位置" : name };
 					}
 				})
 			},

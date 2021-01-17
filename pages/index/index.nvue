@@ -100,14 +100,15 @@
 				    title: '加载中'
 				});
 				try{
-					const result = await getTask();
+					const result = await getTask({status: 3});
 					this.taskList = result;
-				}catch(error){
-					uni.showToast({
-					    title: error.message,
-						icon: "none", 
-					    duration: 2000
-					});
+				}catch{
+					
+					// uni.showToast({
+					//     title: error.message,
+					// 	icon: "none", 
+					//     duration: 2000
+					// });
 				}
 				uni.hideLoading();
 			},

@@ -13,7 +13,6 @@ const request = (url, options) => {
 		...options
 	}).then(response => {
 		const [error, res]  = response;
-		
 		const { code, data } = res.data;
 		
 		switch(code){
