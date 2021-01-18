@@ -10,3 +10,4 @@ export const getCode = options => request(config.code, {method: "post", header: 
 // 绑定警车
 export const bindPolice = options => request(config.bind, {method: "post", data: options});
 
+

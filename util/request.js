@@ -19,21 +19,28 @@ const request = (url, options) => {
 			case 200:
 				return Promise.resolve(data);
 			case 303:
-				if (token) {
-					uni.removeStorage({
-						key: 'token',
-						success: function () {
-							uni.reLaunch({
-							    url: '/pages/login/index'
-							});
-						}
-					});
-				} else {
-					uni.reLaunch({
-					    url: '/pages/login/index'
-					});
-				}
-				
+				//删除token
+				uni.removeStorage({
+					key: 'token',
+					success: function () {
+					}
+				});
+				//删除用户信息
+				uni.removeStorage({
+					key: 'userinfo',
+					success: function () {
+					}
+				});
+				//删除用户工作状态
+				uni.removeStorage({
+					key: 'storage_status',
+					success: (res) => {
+					}
+				});
+				//跳转登录页
+				uni.reLaunch({
+					url: '/pages/login/index'
+				});
 			default: 
 				return Promise.reject(res.data);
 		}

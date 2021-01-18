@@ -28,6 +28,7 @@
 
 <script>
 	import * as api from "@/api/user";
+	import igexinTool from "@/util/igexinTool";
 	export default {
 		name: "login",
 		data() {
@@ -65,18 +66,62 @@
 			submit() {
 				this.$refs.uForm.validate(async valid => {
 					if (valid) {
-						try{
-							const { mobile, code } = this.form;
-							const result = await api.login({ phone:mobile, code });
-							uni.setStorage({
-							    key: 'token',
-							    data: result.sign,
-							    success (res) {
-							        uni.redirectTo({url: "/pages/index/index"});
-							    }
+						try {
+							const {
+								mobile,
+								code
+							} = this.form;
+							const result = await api.login({
+								phone: mobile,
+								code
 							});
-						}catch(error){
-							const { message } = error;
+							uni.setStorage({
+								key: 'token',
+								data: result.sign,
+								success(res) {
+									var testRes = {
+										"action": null,
+										"admin": {
+											"id": "1304258162437767169",
+											"name": "管理员"
+										},
+										"avatar": "",
+										"createtime": "1610942467",
+										"friends": [],
+										"groups": [],
+										"id": "1346430184940666882",
+										"isdelete": 0,
+										"jwtKey": "{\"source\":\"jb.jxj.jwt\",\"name\":\"梁代玉\"}",
+										"name": "梁代玉",
+										"nick": "梁代玉",
+										"online": 0,
+										"sign": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzQ2NDMwMTg0OTQwNjY2ODgyIiwiZXhwIjoxNjExMDI4ODY3LCJ1c2VySWQiOjEzNDY0MzAxODQ5NDA2NjY4ODIsImlhdCI6MTYxMDk0MjQ2NywiYWNjb3VudCI6IjMwMjIzNCIsInVzZXJLZXkiOiJqYi5qeGouand0In0.QvWsSPpY0AMzY5lveuzCKM8vQoiyNEp7ePRyCahT0jO7bvuWOb09MUasfEAJw2tjRKyE-2vu43grINYvwPReeg",
+										"source": "jb.jxj.jwt",
+										"terminal": "",
+										"unique": "302234",
+										"userId": "1346430184940666882"
+									}
+									//存用户登录信息
+									console.log(result.unique);
+									uni.setStorage({
+										key: 'userinfo',
+										data: result,
+										success: (res) => {
+										}
+									});
+									uni.redirectTo({
+										url: "/pages/index/index"
+									});
+									//个推绑定别名
+									var tool = new igexinTool();
+									tool.bindAlias(userinfo.unique);
+									tool.turnOnPush();
+								}
+							});
+						} catch (error) {
+							const {
+								message
+							} = error;
 							this.$refs.uToast.show({
 								title: message,
 								type: 'error'
@@ -89,12 +134,14 @@
 				this.tips = text;
 			},
 			async getCode() {
-				const {mobile} = this.form;
-				if(!mobile) {
+				const {
+					mobile
+				} = this.form;
+				if (!mobile) {
 					this.$u.toast('请输入手机号');
 					return;
 				}
-				if(!this.$u.test.mobile(mobile)){
+				if (!this.$u.test.mobile(mobile)) {
 					this.$u.toast('手机号码不正确');
 					return;
 				}
@@ -102,13 +149,17 @@
 					uni.showLoading({
 						title: '正在获取验证码'
 					})
-					try{
-						const code = await api.getCode({phone: mobile});
+					try {
+						const code = await api.getCode({
+							phone: mobile
+						});
 						uni.hideLoading();
 						this.$u.toast('验证码已发送');
 						this.$refs.uCode.start();
-					}catch(error){
-						const { message } = error;
+					} catch (error) {
+						const {
+							message
+						} = error;
 						uni.hideLoading();
 						this.$u.toast(message);
 					}

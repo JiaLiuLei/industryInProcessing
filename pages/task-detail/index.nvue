@@ -327,7 +327,7 @@
 		margin-top: 30rpx;
 		width: 650rpx;
 		height: 300rpx;
-		border-radius: 16rpx;
+		border-radius: 4rpx;
 		border-width: 2rpx;
 		border-style: solid;
 		border-color: #D7D7D7;
@@ -336,7 +336,6 @@
 	.mapstyle {
 		width: 646rpx;
 		height: 296rpx;
-		border-radius: 16rpx;
 	}
 	.cell{
 		flex-direction: row;

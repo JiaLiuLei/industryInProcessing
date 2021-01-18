@@ -1,36 +1,58 @@
 <template>
 	<div class="container">
 		<image class="icon" src="/static/icon-via-default.png"></image>
-		<text class="name">周警官</text>
-		<text class="tip">下午好，欢迎使用交巡警智能管理平台</text>
+		<text class="name">{{username}}</text>
+		<text class="tip">{{hoursTip}}，欢迎使用交巡警智能管理平台</text>
 	</div>
 </template>
 
 <script>
 	export default {
-		
+		props: {
+			username: {
+				type: String, // 2为有任务正在处理, 0下班, 1上班
+				default: "未命名"
+			}
+		},
+		computed: {
+			hoursTip() {
+				let hoursTip = '上午好';
+				let date = new Date();
+				if (date.getHours() >= 0 && date.getHours() < 12) {
+					hoursTip = "上午好"
+				} else if (date.getHours() >= 12 && date.getHours() < 18) {
+					hoursTip = "下午好"
+				} else {
+					hoursTip = "晚上好"
+				}
+				return hoursTip;
+			}
+		}
 	}
 </script>
 
 <style scoped>
-.container{
-	flex-direction: row;
-	align-items: center;
-}
-.icon{
-	width: 64rpx;
-	height: 64rpx;
-	border-radius: 64rpx;
-}
-.name{
-	margin-left: 20rpx;
-	font-size: 36rpx;
-	color: #fff;
-}
-.tip{
-	flex: 1;
-	text-align: right;
-	font-size: 24rpx;
-	color: #BDC1CC;
-}
+	.container {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.icon {
+		width: 64rpx;
+		height: 64rpx;
+		border-radius: 64rpx;
+	}
+
+	.name {
+		margin-left: 20rpx;
+		font-size: 36rpx;
+		color: #fff;
+	}
+
+	.tip {
+		flex: 1;
+		text-align: right;
+		font-size: 24rpx;
+		color: #BDC1CC;
+	}
 </style>
