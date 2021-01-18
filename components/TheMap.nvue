@@ -67,7 +67,7 @@
 							points,
 							fail:() => {
 								this.map.moveToLocation({
-									longitude, latitude
+									longitude: tlon, latitude: tlat
 								});
 							}
 						});

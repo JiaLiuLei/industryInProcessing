@@ -119,6 +119,7 @@
 		},
 		onReady() {
 			this.$refs.uForm.setRules(this.rules);
+			uni.hideLoading();
 		}
 	}
 </script>
