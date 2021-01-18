@@ -5,11 +5,6 @@
 				<text class="broadcast-content">{{ item.content }}</text>
 			</div>
 		</div>
-		<!-- <div class="broadcast">
-			<div class="broadcast-item">
-				<text class="broadcast-content">22222222</text>
-			</div>
-		</div> -->
 		<TheMap v-if="showMap" :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
 		<div id="content" class="content">
 			<TheNav :total="taskListTotal"></TheNav>
@@ -50,7 +45,8 @@
 				pageData: {},
 				taskListTotal: 0,
 				userinfo: {},
-				broadcastList: []
+				broadcastList: [],
+				broadcastTimer: null
 			}
 		},
 		computed:{
@@ -165,11 +161,16 @@
 		watch:{
 			broadcast(message){
 				this.broadcastList.push(message);
-				setTimeout(() => {
-					this.broadcastList = this.broadcastList.filter(({alarmSituationId}) => message.alarmSituationId !== alarmSituationId);
-					uni.navigateTo({
-						url: `/pages/task-detail/index?id=${message.alarmSituationId}`
-					})
+				clearInterval(this.broadcastTimer);
+				this.broadcastTimer = setTimeout(() => {
+					if (this.broadcastList.length) {
+						this.broadcastList = this.broadcastList.filter(({alarmSituationId}) => message.alarmSituationId !== alarmSituationId);
+						uni.navigateTo({
+							url: `/pages/task-detail/index?id=${message.alarmSituationId}`
+						})
+					} else {
+						clearInterval(this.broadcastTimer);
+					}
 				}, 5000);
 			}
 		}
