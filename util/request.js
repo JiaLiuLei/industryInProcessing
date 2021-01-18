@@ -18,6 +18,7 @@ const request = (url, options) => {
 		switch(code){
 			case 200:
 				return Promise.resolve(data);
+			case 302:
 			case 303:
 				//删除token
 				uni.removeStorage({

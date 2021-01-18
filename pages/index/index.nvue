@@ -1,5 +1,15 @@
 <template>
 	<div class="container" :style="{height: phoneHeight}">
+		<div class="broadcast" v-if="broadcastList.length">
+			<div class="broadcast-item" v-for="item in broadcastList" :key="item.alarmSituationId">
+				<text class="broadcast-content">{{ item.content }}</text>
+			</div>
+		</div>
+		<!-- <div class="broadcast">
+			<div class="broadcast-item">
+				<text class="broadcast-content">22222222</text>
+			</div>
+		</div> -->
 		<TheMap v-if="showMap" :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
 		<div id="content" class="content">
 			<TheNav :total="taskListTotal"></TheNav>
@@ -21,6 +31,7 @@
 	import { getHomeInfo } from "@/api/public";
 	import { getTask } from "@/api/task";
 	import igexinTool from "@/util/igexinTool";
+	import { mapState } from "vuex";
 
 	export default {
 		components: {
@@ -38,10 +49,12 @@
 				contentHeight: 0,
 				pageData: {},
 				taskListTotal: 0,
-				userinfo: {}
+				userinfo: {},
+				broadcastList: []
 			}
 		},
 		computed:{
+			...mapState(["broadcast"]),
 			showMap(){
 				let status = false;
 				if (Object.keys(this.pageData).length) {
@@ -148,6 +161,17 @@
 					}).exec();
 				})
 			}
+		},
+		watch:{
+			broadcast(message){
+				this.broadcastList.push(message);
+				setTimeout(() => {
+					this.broadcastList = this.broadcastList.filter(({alarmSituationId}) => message.alarmSituationId !== alarmSituationId);
+					uni.navigateTo({
+						url: `/pages/task-detail/index?id=${message.alarmSituationId}`
+					})
+				}, 5000);
+			}
 		}
 	}
 </script>
@@ -168,5 +192,24 @@
 		background-color: #2C2F3A;
 		border-top-left-radius: 50rpx;
 		border-top-right-radius: 50rpx;
+	}
+	.broadcast{
+		position: fixed;
+		top: 0;
+		left: 50rpx;
+		width: 650rpx;
+		z-index: 99;
+	}
+	.broadcast-item{
+		margin-top: 30rpx;
+	}
+	.broadcast-content{
+		width: 650rpx;
+		height: 64rpx;
+		line-height: 64rpx;
+		text-align: center;
+		border-radius: 8rpx;
+		color: #fff;
+		background-color: #0055FE;
 	}
 </style>

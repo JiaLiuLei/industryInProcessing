@@ -5,15 +5,21 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state:{
-        userinfo:""
+        userinfo:"",
+		broadcast: {}
     },
-	getters:{
-		
-	},
     mutations:{
         setUserInfo(state, res){
 			state.userinfo = res
+		},
+		setBroadcast(state, payload){
+			state.broadcast = payload;
 		}
-    }
+    },
+	actions:{
+		broadcastMessage({commit}, payload){
+			commit('setBroadcast', payload);
+		}
+	}
 });
 export default store
