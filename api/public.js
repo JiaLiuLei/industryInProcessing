@@ -8,4 +8,4 @@ export const getHomeInfo = () => request(config.home);
 export const uploadImage = options => request(config.upload, { method:"post", data: options });
 
 // 上传定位
-export const uploadLocation = options => request(config.upload, { method:"post", data: options });
+export const uploadLocation = options => request(config.location, { method:"post", data: options });

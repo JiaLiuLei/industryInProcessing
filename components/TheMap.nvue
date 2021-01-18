@@ -49,7 +49,7 @@
 					this.longitude = longitude;
 					this.latitude = latitude;
 					
-					if (this.destination && Object.keys(this.destination).length) {
+					if (this.destination && Object.keys(this.destination).length > 0) {
 						const { longitude: tlon, latitude: tlat } = this.destination;
 						
 						// 警情标点

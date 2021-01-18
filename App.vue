@@ -73,6 +73,7 @@
 				// console.log(params)
 				try{
 					const result = await api.uploadLocation(params);
+					// console.log(result);
 				}catch(error){
 					console.log(error);
 				}
