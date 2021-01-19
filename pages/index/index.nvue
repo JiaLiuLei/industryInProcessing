@@ -106,9 +106,6 @@
 		},
 		methods: {
 			async getPageData(){
-				uni.showLoading({
-				    title: '加载中'
-				});
 				try{
 					const result = await getHomeInfo();
 					this.pageData = result;
@@ -119,16 +116,10 @@
 					    duration: 2000
 					});
 				}
-				uni.hideLoading();
-				
-				
 				this.setContentHeight();
 
 			},
 			async getTaskList(){
-				uni.showLoading({
-				    title: '加载中'
-				});
 				try{
 					const result = await getTask({status: 2});
 					this.taskListTotal = result.total;
@@ -139,7 +130,6 @@
 					    duration: 2000
 					});
 				}
-				uni.hideLoading();
 			},
 			handlePerform(){
 				this.getPageData();
@@ -149,12 +139,14 @@
 			setContentHeight() {
 				this.$nextTick(() =>{
 					const query = uni.createSelectorQuery().in(this);
-					query.select('#content').boundingClientRect(data => {
-						const {
-							height
-						} = data;
-						this.contentHeight = height;
-					}).exec();
+					if(query){
+						query.select('#content').boundingClientRect(data => {
+							const {
+								height
+							} = data;
+							this.contentHeight = height;
+						}).exec();
+					}
 				})
 			}
 		},

@@ -22,7 +22,6 @@
 			</u-form>
 		</view>
 		<u-button type="primary" :custom-style="{width:'100%'}" @tap="submit">登录</u-button>
-		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -118,15 +117,7 @@
 									tool.turnOnPush();
 								}
 							});
-						} catch (error) {
-							const {
-								message
-							} = error;
-							this.$refs.uToast.show({
-								title: message,
-								type: 'error'
-							})
-						}
+						} catch {}
 					}
 				});
 			},

@@ -140,9 +140,6 @@
 				if (this[key].total && this[key]['list'].length >= this[key].total) {
 					return;
 				}
-				uni.showLoading({
-				    title: '加载中'
-				});
 				try{
 					const result = await getTask({status, current: this.currentPage, size: this.size});
 					const { total, records } = result;
@@ -159,7 +156,6 @@
 					this[key] = {};
 				}
 				this.loading = true;
-				uni.hideLoading();
 			},
 			handlePhoneCall(number){
 				uni.makePhoneCall({

@@ -20,8 +20,6 @@
 		<template v-else>
 			<view class="affirm">解除绑定</view>
 		</template>
-		
-		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -42,13 +40,7 @@
 			async handleBind(){
 				try{
 					await api.bindPolice({"carNo": "渝AV770B","date": "20200202"})
-				}catch(error){
-					const { message } = error;
-					this.$refs.uToast.show({
-						title: message,
-						type: 'error'
-					})
-				}
+				}catch{}
 			}
 		}
 	}

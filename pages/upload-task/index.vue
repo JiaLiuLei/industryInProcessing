@@ -30,7 +30,6 @@
 			</view>
 		</view>
 		<view class="btn mg" blue @click="handleUpload">上报警情</view>
-		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -151,13 +150,7 @@
 					        }
 					    }
 					});
-				}catch(error){
-					const { message } = error;
-					this.$refs.uToast.show({
-						title: message,
-						type: 'error'
-					})
-				}
+				}catch{}
 			}
 		}
 	}

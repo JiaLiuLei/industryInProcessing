@@ -128,9 +128,6 @@
 					});
 					return
 				}
-				uni.showLoading({
-				    title: '提交中...'
-				});
 				try {
 					const result = await api.uploadReceipt({
 						jqId: this.pageData.id,
@@ -139,45 +136,21 @@
 					});
 					uni.hideLoading()
 					this.handleLaterProcessing();
-				} catch (error) {
-					uni.hideLoading();
-					const {
-						message
-					} = error;
-					uni.showToast({
-					    title: message,
-					    duration: 2000,
-						icon: 'none'
-					});
-				}
+				} catch {}
 			},
 			async getPageData(id) {
-				uni.showLoading({
-				    title: '加载中'
-				});
 				try {
 					const result = await api.getTaskDetail({
 						jqId: id
 					});
 					this.pageData = result;
 					this.changeNavIndex(result.status);
-				} catch (error) {
-					const {
-						message
-					} = error;
-					uni.showToast({
-					    title: message,
-					    duration: 2000,
-						icon: 'none'
-					});
-				}
-				uni.hideLoading();
+				} catch {}
+
 			},
 			// 右滑完成当前警情
 			async handleSliderEnd() {
-				uni.showLoading({
-					title: '加载中'
-				});
+
 				const { id, status } = this.pageData;
 				try{
 					await api.updateTaskStatus({
@@ -185,14 +158,7 @@
 						status
 					});
 					this.getPageData(this.id);
-				}catch(error){
-					uni.showToast({
-						title: error.message,
-						icon: "none", 
-						duration: 2000
-					});
-				}
-				uni.hideLoading();
+				}catch{}
 			},
 			changeNavIndex(status) {
 				let index = 1;
@@ -224,16 +190,7 @@
 					uni.reLaunch({
 					    url: '/pages/index/index'
 					});
-				} catch (error) {
-					const {
-						message
-					} = error;
-					uni.showToast({
-					    title: message,
-					    duration: 2000,
-						icon: 'none'
-					});
-				}
+				} catch {}
 				this.finished = true;
 			},
 			

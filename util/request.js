@@ -7,14 +7,19 @@ const request = (url, options) => {
 		header = {...options.header, ...header};
 		delete options.header;
 	}
+	uni.showLoading({
+	    title: '加载中'
+	});
 	return uni.request({
 		header,
 		url: `${config.BASE_URL}${url}`,
 		...options
 	}).then(response => {
+		uni.hideLoading();
+	
 		const [error, res]  = response;
 		const { code, data } = res.data;
-		
+	
 		switch(code){
 			case 200:
 				return Promise.resolve(data);
@@ -42,8 +47,15 @@ const request = (url, options) => {
 				uni.reLaunch({
 					url: '/pages/login/index'
 				});
-			default: 
+			default:{
+				uni.showToast({
+				    title: res.data.message,
+					icon: "none",
+				    duration: 2000
+				});
 				return Promise.reject(res.data);
+			}
+
 		}
 	})
 }
