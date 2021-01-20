@@ -1,12 +1,10 @@
-<template v-if="status === 3">
-	<div class="container">
+<template>
+	<div class="container" v-if="status === 3">
 		<div class="status busy"></div>
 		<text class="text">正在进行接处警</text>
 		<image class="arrow" src="../../static/icon-arrow.png"></image>
 	</div>
-</template>
-<template v-else>
-	<picker mode="selector" :value="value" :range="array" @change="handlePickerChange">
+	<picker v-else mode="selector" :value="value" :range="array" @change="handlePickerChange">
 		<div class="container">
 			<div class="status"></div>
 			<text class="text">{{(storageSta == 0 ? array[value] : defaultSta)}}</text>
@@ -19,7 +17,7 @@
 	export default {
 		props: {
 			status: {
-				type: Number, // 2为有任务正在处理, 0下班, 1上班
+				type: Number, // 3为有任务正在处理, 0下班, 1上班
 				default: 1
 			}
 		},

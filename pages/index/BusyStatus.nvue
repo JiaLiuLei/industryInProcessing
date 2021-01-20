@@ -42,19 +42,23 @@
 <script>
 	import WorkStatus from "./WorkStatus";
 	import TheSlider from "@/components/Theslider";
-	import { updateTaskStatus } from "@/api/task";
+	import {
+		updateTaskStatus
+	} from "@/api/task";
 	export default {
-		props:{
+		props: {
 			sourceData: Object
 		},
 		components: {
 			WorkStatus,
 			TheSlider
 		},
-		computed:{
+		computed: {
 			alarm() {
 				let obj = Object.create(null);
-				const { alarm } = this.sourceData;
+				const {
+					alarm
+				} = this.sourceData;
 				if (alarm != null && typeof alarm === "object") {
 					obj = alarm;
 				}
@@ -62,7 +66,9 @@
 			},
 			bindCard() {
 				let arr = [];
-				const { bindCard } = this.sourceData;
+				const {
+					bindCard
+				} = this.sourceData;
 				if (Array.isArray(bindCard)) {
 					arr = bindCard;
 				}
@@ -71,154 +77,168 @@
 			plateNumber() {
 				let number = 0;
 				if (this.bindCard.length) {
-					const { no = "" } = this.bindCard[0];
+					const {
+						no = ""
+					} = this.bindCard[0];
 					number = no.substring(1, no.length - 1);
 				}
 				return number;
 			}
 		},
-		methods:{
-			handlePhoneCall(number){
+		methods: {
+			handlePhoneCall(number) {
 				uni.makePhoneCall({
-				    phoneNumber: number
+					phoneNumber: number
 				});
 			},
-			async handlePerform(){
-				uni.showLoading({
-				    title: '加载中'
+			async handlePerform() {
+				const {
+					id,
+					status
+				} = this.alarm;
+				await updateTaskStatus({
+					jqId: id,
+					status: 0
 				});
-				const { id, status } = this.alarm;
-				try{
-					await updateTaskStatus({
-						jqId: id,
-						status: 0
-					});
-					this.$emit("perform");
-				}catch(error){
-					uni.showToast({
-					    title: error.message,
-						icon: "none", 
-					    duration: 2000
-					});
-				}
-				uni.hideLoading();
+				this.$emit("perform");
 			}
 		}
 	}
 </script>
 
 <style scoped>
-.container{
-	margin-top: 50rpx;
-}
-.car{
-	flex-direction: row;
-	align-items: flex-end;
-	justify-content: space-between;
-}
-.mileage-detail{
-	flex-direction: row;
-	align-items: flex-end;
-}
-.big-number{
-	font-size: 100rpx;
-	line-height: 100rpx;
-	color: #fff;
-}
-.unit{
-	font-size: 28rpx;
-	color: #6C6F7B;
-}
-.text{
-	font-size: 24rpx;
-	color: #6C6F7B;
-}
-.card{
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	width: 300rpx;
-	height: 88rpx;
-	border-width: 4rpx;
-	border-color: #BDC1CC;
-	border-style: solid;
-	border-radius: 8rpx;
-	background-color: #fff;
-}
-.card-text{
-	font-size: 36rpx;
-	color: #000;
-}
-.tangerine{
-	color: #FF6854;
-}
+	.container {
+		margin-top: 50rpx;
+	}
 
-.task{
-	margin-top: 40rpx;
-	flex-direction: row;
-	align-items: flex-end;
-	justify-content: space-between;
-}
-.task-detail{
-	flex-direction: row;
-	align-items: flex-end;
-}
-.small-number{
-	font-size: 60rpx;
-	line-height: 60rpx;
-	color: #fff;
-}
-.task-info{
-	margin-top: 36rpx;
-	border-top-width: 2rpx;
-	border-top-color: #3A3E4C;
-	border-top-style: solid;
-}
-.card-box{
-	padding: 20rpx;
-	border-radius: 16rpx;
-	background-color: #fff;
-}
-.user{
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-}
-.user-box{
-	flex-direction: row;
-	align-items: center;
-}
-.via{
-	width: 64rpx;
-	height: 64rpx;
-	border-radius: 64rpx;
-}
-.name{
-	margin-left: 10rpx;
-	font-size: 28rpx;
-	color: #424758;
-}
-.call-box{
-	flex-direction: row;
-	align-items: center;
-}
-.call{
-	font-size: 28rpx;
-	color: #424758;
-}
-.arrow{
-	width: 44rpx;
-	height: 44rpx;
-}
-.user-task-detail{
-	margin-top: 20rpx;
-	padding: 30rpx 20rpx;
-	font-size: 28rpx;
-	border-radius: 8rpx;
-	color: #202536;
-	background-color: #F2F2F2;
-}
-.slider{
-	margin-top: 30rpx;
-}
+	.car {
+		flex-direction: row;
+		align-items: flex-end;
+		justify-content: space-between;
+	}
+
+	.mileage-detail {
+		flex-direction: row;
+		align-items: flex-end;
+	}
+
+	.big-number {
+		font-size: 100rpx;
+		line-height: 100rpx;
+		color: #fff;
+	}
+
+	.unit {
+		font-size: 28rpx;
+		color: #6C6F7B;
+	}
+
+	.text {
+		font-size: 24rpx;
+		color: #6C6F7B;
+	}
+
+	.card {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		width: 300rpx;
+		height: 88rpx;
+		border-width: 4rpx;
+		border-color: #BDC1CC;
+		border-style: solid;
+		border-radius: 8rpx;
+		background-color: #fff;
+	}
+
+	.card-text {
+		font-size: 36rpx;
+		color: #000;
+	}
+
+	.tangerine {
+		color: #FF6854;
+	}
+
+	.task {
+		margin-top: 40rpx;
+		flex-direction: row;
+		align-items: flex-end;
+		justify-content: space-between;
+	}
+
+	.task-detail {
+		flex-direction: row;
+		align-items: flex-end;
+	}
+
+	.small-number {
+		font-size: 60rpx;
+		line-height: 60rpx;
+		color: #fff;
+	}
+
+	.task-info {
+		margin-top: 36rpx;
+		border-top-width: 2rpx;
+		border-top-color: #3A3E4C;
+		border-top-style: solid;
+	}
+
+	.card-box {
+		padding: 20rpx;
+		border-radius: 16rpx;
+		background-color: #fff;
+	}
+
+	.user {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.user-box {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.via {
+		width: 64rpx;
+		height: 64rpx;
+		border-radius: 64rpx;
+	}
+
+	.name {
+		margin-left: 10rpx;
+		font-size: 28rpx;
+		color: #424758;
+	}
+
+	.call-box {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.call {
+		font-size: 28rpx;
+		color: #424758;
+	}
+
+	.arrow {
+		width: 44rpx;
+		height: 44rpx;
+	}
+
+	.user-task-detail {
+		margin-top: 20rpx;
+		padding: 30rpx 20rpx;
+		font-size: 28rpx;
+		border-radius: 8rpx;
+		color: #202536;
+		background-color: #F2F2F2;
+	}
+
+	.slider {
+		margin-top: 30rpx;
+	}
 </style>
