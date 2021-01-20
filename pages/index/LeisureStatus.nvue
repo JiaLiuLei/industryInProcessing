@@ -1,20 +1,21 @@
 <template>
 	<div class="container">
 		<div class="info">
-			<div>
+			<!-- <div>
 				<div class="mileage-detail">
 					<text class="big-number">{{alarm.todayPatrolDistance || 0}}</text><text class="unit">Km</text>
 				</div>
 				<text class="text">今日累计巡逻里程</text>
-			</div>
+			</div> -->
 			<div>
 				<div class="task-detail">
 					<text class="small-number">{{alarm.totalHandleAlarm || 0}}</text><text class="text">起</text>
 				</div>
 				<text class="text">警情处置数</text>
 			</div>
+			<WorkStatus :status="alarm.status"></WorkStatus>
 		</div>
-		<div class="tool">
+		<!-- <div class="tool">
 			<div class="btn">
 				<image class="icon-relevance" src="/static/icon-relevance.png"></image>
 
@@ -27,7 +28,7 @@
 				</navigator>
 			</div>
 			<WorkStatus :status="alarm.status"></WorkStatus>
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -47,6 +48,7 @@
 				if (alarm != null && typeof alarm === "object") {
 					obj = alarm;
 				}
+				// console.log(this.sourceData)
 				return obj;
 			},
 			bindCard() {

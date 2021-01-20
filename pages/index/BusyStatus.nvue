@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="car">
+		<!-- <div class="car">
 			<div>
 				<div class="mileage-detail">
 					<text class="big-number">{{alarm.todayPatrolDistance || 0}}</text><text class="unit">Km</text>
@@ -10,7 +10,7 @@
 			<div class="card">
 				<text class="card-text">渝·{{ plateNumber }}</text><text class="card-text tangerine">警</text>
 			</div>
-		</div>
+		</div> -->
 		<div class="task">
 			<div>
 				<div class="task-detail">
@@ -91,7 +91,7 @@
 				try{
 					await updateTaskStatus({
 						jqId: id,
-						status: status
+						status: 0
 					});
 					this.$emit("perform");
 				}catch(error){
@@ -156,7 +156,7 @@
 .task{
 	margin-top: 40rpx;
 	flex-direction: row;
-	align-items: center;
+	align-items: flex-end;
 	justify-content: space-between;
 }
 .task-detail{

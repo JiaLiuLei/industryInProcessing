@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="contentList">
 		<view class="nav">
 			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="current" @change="handleNavChange"></u-subsection>
 		</view>
@@ -20,7 +20,7 @@
 					<view class="content">
 						<view class="text">{{item.content}}</view>
 					</view>
-					<view class="action" @tap="handleNavigateToDetail(item.id)">立即处理警情</view>
+					<view class="action" @tap="handleNavigateToDetail(item.id)">接受</view>
 				</view>
 			</template>
 			<u-empty margin-top="100" v-else mode="search" text="没有待处理的任务"></u-empty>
@@ -42,7 +42,7 @@
 					<view class="content">
 						<view class="text">{{item.content}}</view>
 					</view>
-					<view class="action" @tap="handleNavigateToDetail(item.id)">完成警情</view>
+					<view class="action" @tap="handleNavigateToDetail(item.id)">立即处理警情</view>
 				</view>
 			</template>
 			<u-empty margin-top="100" v-else mode="search" text="没有处理中的任务"></u-empty>
@@ -167,6 +167,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.contentList{
+		padding-bottom: 50rpx;
+	}
 	.nav{
 		padding: 20rpx 180rpx;
 		background-color: #fff;
@@ -233,5 +236,5 @@
 <style>
 	page {
 	  background-color: #FAFAFA;
-	} 
+	}
 </style>

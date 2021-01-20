@@ -20,7 +20,7 @@
 			<view class="btn mg-t30" @click="handleLaterProcessing"><text class="btn-text">稍后处理</text></view>
 		</template>
 		<template v-if="activeIndex === 2">
-			<TheSlider class="slider" bgColor="#F5F5F5" @success="handleSliderEnd"></TheSlider>
+			<TheSlider class="slider" bgColor="#F5F5F5" @success="handleSliderEnd(0)"></TheSlider>
 		</template>
 		<template v-if="activeIndex === 3">
 			<view class="update">
@@ -96,6 +96,9 @@
 		onLoad(params) {
 			this.id = params.id;
 			this.getPageData(params.id);
+			// setTimeout(() => {
+			// 	this.handleSliderEnd(2);
+			// }, 5000);
 		},
 		methods: {
 			handleImageUploadSuccess(data) {
@@ -149,15 +152,18 @@
 
 			},
 			// 右滑完成当前警情
-			async handleSliderEnd() {
+			async handleSliderEnd(updateStatus) {
 
 				const { id, status } = this.pageData;
 				try{
 					await api.updateTaskStatus({
 						jqId: id,
-						status
+						status: updateStatus
 					});
 					this.getPageData(this.id);
+					uni.redirectTo({
+					    url: `/pages/task-detail/index?id=${id}`
+					});
 				}catch{}
 			},
 			changeNavIndex(status) {
@@ -173,6 +179,7 @@
 						index = 2;
 						break;
 				}
+				// console.log(index)
 				this.activeIndex = index;
 			},
 			handleLaterProcessing() {
@@ -183,12 +190,17 @@
 					return;
 				}
 				this.finished = false;
+				
+				this.handleSliderEnd(3);
 				try {
 					await api.dealWithTask({
 						jqId: id
 					});
-					uni.reLaunch({
-					    url: '/pages/index/index'
+					// uni.reLaunch({
+					//     url: '/pages/index/index'
+					// });
+					uni.navigateBack({
+					    delta: 2
 					});
 				} catch {}
 				this.finished = true;

@@ -130,6 +130,7 @@
 					    duration: 2000
 					});
 				}
+				this.setContentHeight();
 			},
 			handlePerform(){
 				this.getPageData();
