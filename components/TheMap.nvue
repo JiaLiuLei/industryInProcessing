@@ -1,14 +1,6 @@
 <template>
 	<div class="container">
-		<map
-			id="map"
-			ref="map"
-			class="map"
-			:style="{ height, width }"
-			:markers="markers"
-			enable-traffic
-			show-location
-			@markertap="markertap">
+		<map id="map" ref="map" class="map" :markers="markers" enable-traffic show-location @markertap="markertap">
 		</map>
 		<div class="controls" v-if="controls">
 			<div class="refresh" @click="handleReresh">
@@ -24,9 +16,7 @@
 <script>
 	export default {
 		name: "map",
-		props:{
-			height: [Number || String],
-			width: [Number || String],
+		props: {
 			destination: Object,
 			controls: Boolean
 		},
@@ -35,61 +25,73 @@
 				longitude: 0,
 				latitude: 0,
 				markers: [],
-				polyline: [] ,
+				polyline: [],
 				includePoints: [],
 				map: null
 			}
 		},
 		mounted() {
 			this.map = uni.createMapContext("map", this);
-			
+
 			uni.getLocation({
 				type: "gcj02",
 				success: res => {
-					const { longitude, latitude } = res;
-					
+					const {
+						longitude,
+						latitude
+					} = res;
+
 					this.longitude = longitude;
 					this.latitude = latitude;
-					
+
 					if (this.destination && Object.keys(this.destination).length > 0) {
-						const { longitude: tlon, latitude: tlat } = this.destination;
-						
+						const {
+							longitude: tlon,
+							latitude: tlat
+						} = this.destination;
+
 						// 警情标点
 						this.setTargetMarker(tlon, tlat);
-						
-						const points = [
-							{longitude, latitude},
-							{longitude: tlon, latitude: tlat}
+
+						const points = [{
+								longitude,
+								latitude
+							},
+							{
+								longitude: tlon,
+								latitude: tlat
+							}
 						];
-						
+
 						this.includePoints = points;
-						
+
 						this.map.includePoints({
 							padding: [100, 80, 100, 80],
 							points,
-							fail:() => {
+							fail: () => {
 								this.map.moveToLocation({
-									longitude: tlon, latitude: tlat
+									longitude: tlon,
+									latitude: tlat
 								});
 							}
 						});
-						
+
 						//路线规划
 						this.polyline = [{
 							points,
 							color: '#0000AA',
 							width: 10
 						}];
-						// console.log(this.polyline)
 					} else {
 						this.map.moveToLocation({
-							longitude, latitude
+							longitude,
+							latitude
 						});
 					}
 				}
 			});
 		},
-		methods:{
+		methods: {
 			handleReresh() {
 				if (this.includePoints.length) {
 					this.map.includePoints({
@@ -109,23 +111,21 @@
 					latitude: this.latitude
 				});
 			},
-			setTargetMarker(longitude, latitude){
-				this.markers = [
-					{
-						id: 1,
-						latitude,
-						longitude,
-						iconPath: "/static/icon-position-target.png",
-						width: 44,
-						height: 50
-					}
-				]
+			setTargetMarker(longitude, latitude) {
+				this.markers = [{
+					id: 1,
+					latitude,
+					longitude,
+					iconPath: "/static/icon-position-target.png",
+					width: 44,
+					height: 50
+				}]
 			},
-			markertap(){
+			markertap() {
 				uni.openLocation({
 					latitude: this.includePoints[1].latitude,
 					longitude: this.includePoints[1].longitude,
-					success: function () {
+					success: function() {
 						console.log('打开内置地图app');
 					}
 				});
@@ -135,21 +135,32 @@
 </script>
 
 <style lang="scss" scoped>
-.controls{
-	position: absolute;
-	bottom: 40rpx;
-	right: 25rpx;
-	
-}
-.refresh, .location{
-	margin-bottom: 20rpx;
-	padding: 13rpx;
-	border-radius: 8rpx;
-	background-color: #fff;
-}
-.icon{
-	width: 48rpx;
-	height: 48rpx;
-}
+	.container {
+		flex: 1;
+	}
 
+	.map {
+		width: 750rpx;
+		flex: 1;
+	}
+
+	.controls {
+		position: absolute;
+		bottom: 40rpx;
+		right: 25rpx;
+
+	}
+
+	.refresh,
+	.location {
+		margin-bottom: 20rpx;
+		padding: 13rpx;
+		border-radius: 8rpx;
+		background-color: #fff;
+	}
+
+	.icon {
+		width: 48rpx;
+		height: 48rpx;
+	}
 </style>

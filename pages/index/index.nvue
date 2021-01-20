@@ -5,7 +5,9 @@
 				<text class="broadcast-content">{{ item.content }}</text>
 			</div>
 		</div>
-		<TheMap v-if="showMap" :height="mapHeight" :width="phoneWidth" controls :destination="destination"></TheMap>
+		<div class="map-box">
+			<TheMap v-if="showMap" controls :destination="destination"></TheMap>
+		</div>
 		<div id="content" class="content">
 			<TheNav :total="taskListTotal"></TheNav>
 			<div class="detail">
@@ -23,10 +25,16 @@
 	import BusyStatus from "./BusyStatus";
 	import TheNav from "./TheNav";
 	import TheMap from "@/components/TheMap";
-	import { getHomeInfo } from "@/api/public";
-	import { getTask } from "@/api/task";
+	import {
+		getHomeInfo
+	} from "@/api/public";
+	import {
+		getTask
+	} from "@/api/task";
 	import igexinTool from "@/util/igexinTool";
-	import { mapState } from "vuex";
+	import {
+		mapState
+	} from "vuex";
 
 	export default {
 		components: {
@@ -39,9 +47,6 @@
 		data() {
 			return {
 				nowMapIndex: true,
-				phoneHeight: 0, //屏幕高
-				phoneWidth: 0, // 屏幕宽
-				contentHeight: 0,
 				pageData: {},
 				taskListTotal: 0,
 				userinfo: {},
@@ -49,9 +54,9 @@
 				broadcastTimer: null
 			}
 		},
-		computed:{
+		computed: {
 			...mapState(["broadcast"]),
-			showMap(){
+			showMap() {
 				let status = false;
 				if (Object.keys(this.pageData).length) {
 					status = true;
@@ -60,104 +65,72 @@
 			},
 			alarm() {
 				let obj = Object.create(null);
-				const { alarm } = this.pageData;
+				const {
+					alarm
+				} = this.pageData;
 				if (alarm != null && typeof alarm === "object") {
 					obj = alarm;
 				}
 				return obj;
 			},
-			// map高度
-			mapHeight() {
-				return this.phoneHeight - this.contentHeight;
-			},
-			destination(){
+			destination() {
 				let result = Object.create(null);
 				if (Object.keys(this.alarm).length) {
-					const { lng, lat } = this.alarm;
-					result = { longitude: lng, latitude: lat }
+					const {
+						lng,
+						lat
+					} = this.alarm;
+					result = {
+						longitude: lng,
+						latitude: lat
+					}
 				}
 				return result;
 			}
 		},
 		onReady() {
-			// 计算屏幕高度 ，宽度
-			uni.getSystemInfo({
-				success: (res) => {
-					this.phoneHeight = res.windowHeight;
-					this.phoneWidth = res.windowWidth;
-				}
-			});
-			
 			//用户信息
 			const userinfo = uni.getStorageSync('userinfo');
 			this.userinfo = userinfo;
-			this.$store.commit('setUserInfo',userinfo)
+			this.$store.commit('setUserInfo', userinfo)
 			console.log(this.$store.state.userinfo)
-			
+
 			//个推绑定别名
 			var tool = new igexinTool();
 			tool.bindAlias(userinfo.unique);
 			tool.turnOnPush();
-			
+
 		},
 		async onShow() {
-			await this.getPageData();
+			this.getPageData();
 			this.getTaskList();
 		},
 		methods: {
-			async getPageData(){
-				try{
-					const result = await getHomeInfo();
-					this.pageData = result;
-				}catch(error){
-					uni.showToast({
-					    title: error.message,
-						icon: "none", 
-					    duration: 2000
-					});
-				}
-				this.setContentHeight();
-
-			},
-			async getTaskList(){
-				try{
-					const result = await getTask({status: 2});
-					this.taskListTotal = result.total;
-				}catch(error){
-					uni.showToast({
-					    title: error.message,
-						icon: "none", 
-					    duration: 2000
-					});
-				}
+			async getPageData() {
+				const result = await getHomeInfo();
+				this.pageData = result;
 				this.setContentHeight();
 			},
-			handlePerform(){
+			async getTaskList() {
+				const result = await getTask({
+					status: 2
+				});
+				this.taskListTotal = result.total;
+			},
+			handlePerform() {
 				this.getPageData();
 				this.getTaskList();
-			},
-			// 计算内容高度
-			setContentHeight() {
-				this.$nextTick(() =>{
-					const query = uni.createSelectorQuery().in(this);
-					if(query){
-						query.select('#content').boundingClientRect(data => {
-							const {
-								height
-							} = data;
-							this.contentHeight = height;
-						}).exec();
-					}
-				})
 			}
 		},
-		watch:{
-			broadcast(message){
+		watch: {
+			broadcast(message) {
 				this.broadcastList.push(message);
 				clearInterval(this.broadcastTimer);
 				this.broadcastTimer = setTimeout(() => {
 					if (this.broadcastList.length) {
-						this.broadcastList = this.broadcastList.filter(({alarmSituationId}) => message.alarmSituationId !== alarmSituationId);
+						this.broadcastList = this.broadcastList.filter(({
+							alarmSituationId
+						}) => message.alarmSituationId !== alarmSituationId);
 						uni.navigateTo({
 							url: `/pages/task-detail/index?id=${message.alarmSituationId}`
 						})
@@ -172,32 +145,40 @@
 
 <style scoped>
 	.container {
+		flex: 1;
 		flex-direction: column;
-		background-color: #2C2F3A;
+	}
+	.map-box{
+		flex: 1;
 	}
 	.map {
 		width: 750rpx;
+		flex: 1;
 	}
 	.content {
 		margin-top: -50rpx;
 	}
-	.detail{
-		padding: 50rpx 50rpx 1rpx 50rpx;
+
+	.detail {
+		padding: 50rpx;
 		background-color: #2C2F3A;
 		border-top-left-radius: 50rpx;
 		border-top-right-radius: 50rpx;
 	}
-	.broadcast{
+
+	.broadcast {
 		position: fixed;
 		top: 0;
 		left: 50rpx;
 		width: 650rpx;
 		z-index: 99;
 	}
-	.broadcast-item{
+
+	.broadcast-item {
 		margin-top: 30rpx;
 	}
-	.broadcast-content{
+
+	.broadcast-content {
 		width: 650rpx;
 		height: 64rpx;
 		line-height: 64rpx;
