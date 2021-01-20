@@ -4,7 +4,7 @@
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template v-if="activeIndex !== 3">
 			<view class="map-box">
-				<TheMap class="map" v-if="showMap" class="mapstyle" :destination="targetPosition"></TheMap>
+				<TheMap class="map" v-if="showMap" :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -305,11 +305,7 @@
 	}
 	.map{
 		flex: 1;
-		width: 650rpx;
-	}
-	.mapstyle {
 		width: 646rpx;
-		height: 296rpx;
 	}
 	.cell{
 		flex-direction: row;
