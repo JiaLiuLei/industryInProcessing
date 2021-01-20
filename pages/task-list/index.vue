@@ -1,10 +1,10 @@
 <template>
 	<view class="contentList">
 		<view class="nav">
-			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="current" @change="handleNavChange"></u-subsection>
+			<u-subsection inactive-color="#BDC1CC" active-color="#202536" :list="category" :current="currentTabIndex" @change="handleNavChange"></u-subsection>
 		</view>
 		<!-- 待处理 -->
-		<view class="item" v-show="current === 0">
+		<view class="item" v-show="currentTabIndex === 0">
 			<template v-if="unconfirmedTask.total">
 				<view class="card" v-for="item in unconfirmedTask.list" :key="item.id">
 					<view class="title">
@@ -26,7 +26,7 @@
 			<u-empty margin-top="100" v-else mode="search" text="没有待处理的任务"></u-empty>
 		</view>
 		<!-- 处理中 -->
-		<view class="item" v-show="current === 1">
+		<view class="item" v-show="currentTabIndex === 1">
 			<template v-if="inProgressTask.total">
 				<view class="card" v-for="item in inProgressTask.list" :key="item.id">
 					<view class="title">
@@ -48,7 +48,7 @@
 			<u-empty margin-top="100" v-else mode="search" text="没有处理中的任务"></u-empty>
 		</view>
 		<!-- 待回执 -->
-		<view class="item" v-show="current === 2">
+		<view class="item" v-show="currentTabIndex === 2">
 			<template v-if="completedTask.total">
 				<view class="card" v-for="item in completedTask.list" :key="item.id">
 					<view class="title">
@@ -78,9 +78,10 @@
 	export default {
 		data() {
 			return {
-				unconfirmedTask: {total: 0, list: []},
-				inProgressTask: {total: 0, list: []},
-				completedTask: {total: 0, list: []},
+				unconfirmedTask: {total: 0, list: [], currentPage: 1, status: 2},
+				inProgressTask: {total: 0, list: [], currentPage: 1, status: 3},
+				completedTask: {total: 0, list: [], currentPage: 1, status: 0},
+				listKeys: ["unconfirmedTask", "inProgressTask", "completedTask"],
 				category: [
 					{
 						name: "待处理"
@@ -92,22 +93,25 @@
 						name: "已完成"
 					}
 				],
-				current: 0,
-				currentPage: 1,
-				size: 20,
+				currentTabIndex: 0,
+				size: 10,
 				loading: false
 			}
 		},
-		onBackPress(){
-			this.getTaskList(this.current);
-		},
 		onShow(){
-			this.getTaskList(this.current);
+			const data = this[this.listKeys[this.currentTabIndex]];
+			this[this.listKeys[this.currentTabIndex]] = {
+				...data,
+				total: 0,
+				currentPage: 1,
+				list: []
+			}
+			this.getTaskList();
 		},
 		onReachBottom(){
 			if (this.loading) {
 				this.loading = false;
-				this.getTaskList(this.current);
+				this.getTaskList();
 			}
 		},
 		methods: {
@@ -117,44 +121,26 @@
 				})
 			},
 			handleNavChange(index) {
-				this.current = index;
-				this.currentPage = 1;
-				this.getTaskList(index);
+				this.currentTabIndex = index;
+				const { total } = this[this.listKeys[this.currentTabIndex]];
+				if (!total) {
+					this.getTaskList();
+				}
 			},
 			async getTaskList(index) {
-				let status, key;
-				switch(index){
-					case 0:
-						status = 2;
-						key = "unconfirmedTask";
-					break;
-					case 1:
-						status = 3;
-						key = "inProgressTask";
-					break;
-					case 2:
-						status = 0;
-						key = "completedTask"
-					break;
-				}
-				if (this[key].total && this[key]['list'].length >= this[key].total) {
+				const data = this[this.listKeys[this.currentTabIndex]];
+				const { total, list, currentPage, status } = data;
+				
+				if (total && list.length >= total) {
 					return;
 				}
-				try{
-					const result = await getTask({status, current: this.currentPage, size: this.size});
-					const { total, records } = result;
-					if (this.currentPage === 1) {
-						this[key] = {
-							total,
-							list: records
-						};
-					} else {
-						this[key]['list'] = [...this[key]['list'], ...records];
-					}
-					this.currentPage += 1;
-				}catch{
-					this[key] = {};
-				}
+				const result = await getTask({status, current: currentPage, size: this.size});
+				this[this.listKeys[this.currentTabIndex]] = {
+					...data,
+					total: result.total,
+					list: [...list, ...result.records],
+					currentPage: currentPage + 1
+				};
 				this.loading = true;
 			},
 			handlePhoneCall(number){
