@@ -32,66 +32,68 @@
 		},
 		mounted() {
 			this.map = uni.createMapContext("map", this);
-
-			uni.getLocation({
-				type: "gcj02",
-				success: res => {
-					const {
-						longitude,
-						latitude
-					} = res;
-
-					this.longitude = longitude;
-					this.latitude = latitude;
-
-					if (this.destination && Object.keys(this.destination).length > 0) {
-						const {
-							longitude: tlon,
-							latitude: tlat
-						} = this.destination;
-
-						// 警情标点
-						this.setTargetMarker(tlon, tlat);
-
-						const points = [{
-								longitude,
-								latitude
-							},
-							{
-								longitude: tlon,
-								latitude: tlat
-							}
-						];
-
-						this.includePoints = points;
-
-						this.map.includePoints({
-							padding: [100, 80, 100, 80],
-							points,
-							fail: () => {
-								this.map.moveToLocation({
-									longitude: tlon,
-									latitude: tlat
-								});
-							}
-						});
-
-						//路线规划
-						this.polyline = [{
-							points,
-							color: '#0000AA',
-							width: 10
-						}];
-					} else {
-						this.map.moveToLocation({
-							longitude,
-							latitude
-						});
-					}
-				}
-			});
+			this.setMap();
 		},
 		methods: {
+			setMap() {
+				uni.getLocation({
+					type: "gcj02",
+					success: res => {
+						const {
+							longitude,
+							latitude
+						} = res;
+				
+						this.longitude = longitude;
+						this.latitude = latitude;
+				
+						if (this.destination && Object.keys(this.destination).length > 0) {
+							const {
+								longitude: tlon,
+								latitude: tlat
+							} = this.destination;
+				
+							// 警情标点
+							this.setTargetMarker(tlon, tlat);
+				
+							const points = [{
+									longitude,
+									latitude
+								},
+								{
+									longitude: tlon,
+									latitude: tlat
+								}
+							];
+				
+							this.includePoints = points;
+				
+							this.map.includePoints({
+								padding: [100, 80, 100, 80],
+								points,
+								fail: () => {
+									this.map.moveToLocation({
+										longitude: tlon,
+										latitude: tlat
+									});
+								}
+							});
+				
+							//路线规划
+							this.polyline = [{
+								points,
+								color: '#0000AA',
+								width: 10
+							}];
+						} else {
+							this.map.moveToLocation({
+								longitude,
+								latitude
+							});
+						}
+					}
+				})
+			},
 			handleReresh() {
 				if (this.includePoints.length) {
 					this.map.includePoints({
@@ -129,6 +131,11 @@
 						console.log('打开内置地图app');
 					}
 				});
+			}
+		},
+		watch:{
+			destination(){
+				this.setMap();
 			}
 		}
 	}

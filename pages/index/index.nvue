@@ -106,17 +106,19 @@
 			this.getTaskList();
 		},
 		methods: {
+			// 获取首页数据
 			async getPageData() {
 				const result = await getHomeInfo();
 				this.pageData = result;
-				this.setContentHeight();
 			},
+			// 获取任务列表
 			async getTaskList() {
 				const result = await getTask({
 					status: 2
 				});
 				this.taskListTotal = result.total;
 			},
+			// 右滑完成任务回调
 			handlePerform() {
 				this.getPageData();
 				this.getTaskList();
