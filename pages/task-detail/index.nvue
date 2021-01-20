@@ -3,8 +3,8 @@
 		<StepNav :active="activeIndex"></StepNav>
 		<CardInfo :sourceData="cardData"></CardInfo>
 		<template v-if="activeIndex !== 3">
-			<view class="map">
-				<TheMap v-if="showMap" class="mapstyle" width="646rpx" height="296rpx" :destination="targetPosition"></TheMap>
+			<view class="map-box">
+				<TheMap class="map" v-if="showMap" class="mapstyle" :destination="targetPosition"></TheMap>
 			</view>
 			<view class="cell">
 				<text class="label">警情位置</text>
@@ -292,7 +292,8 @@
 		background-color: #FFFFFF;
 	}
 
-	.map{
+	.map-box{
+		flex-direction: column;
 		margin-top: 30rpx;
 		width: 650rpx;
 		height: 300rpx;
@@ -301,6 +302,10 @@
 		border-style: solid;
 		border-color: #D7D7D7;
 		overflow: hidden;
+	}
+	.map{
+		flex: 1;
+		width: 650rpx;
 	}
 	.mapstyle {
 		width: 646rpx;
