@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<map id="map" ref="map" class="map" :markers="markers" enable-traffic show-location @markertap="markertap">
+		<map id="map" ref="map" class="map" :polyline="polyline" :markers="markers" enable-traffic show-location @markertap="markertap" @updated="setMap">
 		</map>
 		<div class="controls" v-if="controls">
 			<div class="refresh" @click="handleReresh">
@@ -18,7 +18,11 @@
 		name: "map",
 		props: {
 			destination: Object,
-			controls: Boolean
+			controls: Boolean,
+			isPolyline: {
+				type: Boolean,
+				default: false
+			}
 		},
 		data() {
 			return {
@@ -32,9 +36,52 @@
 		},
 		mounted() {
 			this.map = uni.createMapContext("map", this);
-			this.setMap();
+			
+			// this.setMap();
+			// setTimeout(() => {
+			// 	this.setMap();
+			// }, 500);
+			
+			//路线规划
+			if (this.isPolyline) {
+				setInterval(() => {
+					this.polyline = [];
+					this.getLocaPoly();
+				},3000)
+			}
 		},
 		methods: {
+			//路线规划
+			getLocaPoly(){
+				uni.getLocation({
+					type: "gcj02",
+					success: res => {
+						const {
+							longitude,
+							latitude
+						} = res;
+						const {
+							longitude: tlon,
+							latitude: tlat
+						} = this.destination;
+						const points = [{
+								longitude,
+								latitude
+							},
+							{
+								longitude: tlon,
+								latitude: tlat
+							}
+						];
+						this.polyline = [{
+							points,
+							color: '#0055FE',
+							width: 5,
+							dottedLine: true
+						}];
+					}
+				});
+			},
 			setMap() {
 				uni.getLocation({
 					type: "gcj02",
@@ -43,19 +90,19 @@
 							longitude,
 							latitude
 						} = res;
-				
+
 						this.longitude = longitude;
 						this.latitude = latitude;
-				
+
 						if (this.destination && Object.keys(this.destination).length > 0) {
 							const {
 								longitude: tlon,
 								latitude: tlat
 							} = this.destination;
-				
+
 							// 警情标点
 							this.setTargetMarker(tlon, tlat);
-				
+
 							const points = [{
 									longitude,
 									latitude
@@ -65,11 +112,11 @@
 									latitude: tlat
 								}
 							];
-				
+
 							this.includePoints = points;
-				
+
 							this.map.includePoints({
-								padding: [100, 80, 100, 80],
+								padding: [200, 200, 200, 200],
 								points,
 								fail: () => {
 									this.map.moveToLocation({
@@ -78,13 +125,16 @@
 									});
 								}
 							});
-				
+
 							//路线规划
-							this.polyline = [{
-								points,
-								color: '#0000AA',
-								width: 10
-							}];
+							if (this.isPolyline) {
+								this.polyline = [{
+									points,
+									color: '#0055FE',
+									width: 5,
+									dottedLine: true
+								}];
+							}
 						} else {
 							this.map.moveToLocation({
 								longitude,
@@ -97,7 +147,7 @@
 			handleReresh() {
 				if (this.includePoints.length) {
 					this.map.includePoints({
-						padding: [100, 80, 100, 80],
+						padding: [200, 200, 200, 200],
 						points: this.includePoints
 					});
 				} else {
@@ -133,8 +183,8 @@
 				});
 			}
 		},
-		watch:{
-			destination(){
+		watch: {
+			destination() {
 				this.setMap();
 			}
 		}

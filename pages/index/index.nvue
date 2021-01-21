@@ -6,7 +6,7 @@
 			</div>
 		</div>
 		<div class="map-box">
-			<TheMap v-if="showMap" controls :destination="destination"></TheMap>
+			<TheMap v-if="showMap" controls :destination="destination" :isPolyline="true"></TheMap>
 		</div>
 		<div id="content" class="content">
 			<TheNav :total="taskListTotal"></TheNav>
