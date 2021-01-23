@@ -10,6 +10,7 @@ const request = (url, options) => {
 	uni.showLoading({
 	    title: '加载中'
 	});
+	// console.log("请求接口：" + `${config.BASE_URL}${url}`)
 	return uni.request({
 		header,
 		url: `${config.BASE_URL}${url}`,
@@ -53,7 +54,8 @@ const request = (url, options) => {
 					icon: "none",
 				    duration: 2000
 				});
-				return Promise.reject(res.data);
+				// console.log("报错信息：" + JSON.stringify(res.data));
+				return Promise.resolve(res.data);
 			}
 
 		}

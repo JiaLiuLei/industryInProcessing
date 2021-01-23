@@ -54,6 +54,7 @@
 				road: "",
 				addr: "",
 				description: "",
+				status: 0,
 				
 				uploadAction: `${config.BASE_URL}/file/upload`,
 				fileList: [],
@@ -64,9 +65,6 @@
 			}
 		},
 		computed: {
-		},
-		onLoad(params) {
-			this.id = params.id;
 		},
 		async onNavigationBarButtonTap(val) {
 			// console.log(val.index);
@@ -89,8 +87,11 @@
 			    }
 			});
 		},
-		async onShow(){
+		async onLoad(params) {
+			this.id = params.id;
 			this.getTrafficInfo();
+		},
+		onShow(){
 		},
 		onReachBottom(){
 		},
@@ -102,11 +103,12 @@
 			async getTrafficInfo() {
 				try{
 					const result = await api.getTrafficInfo(this.id);
-					console.log(result);
+					// console.log(result);
 					this.index = result.type;
 					this.road = result.road;
 					this.addr = result.addr;
 					this.description = result.description;
+					this.status = result.status;
 					if(result.picture.length > 0){
 						this.fileList = result.picture.split(',').map((item) => {return this.base_url + item});
 						this.imgFile = result.picture.split(',').map((item) => {return this.base_url + item});
@@ -120,7 +122,7 @@
 			async deleteTrafficInfo(){
 				try{
 					const result = await api.deleteTrafficInfo(this.id);
-					console.log(result);
+					// console.log(result);
 					uni.showToast({
 					    title: '删除成功',
 					    duration: 2000,

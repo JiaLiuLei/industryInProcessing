@@ -125,9 +125,9 @@
 								lng: longitude,
 								lat: latitude
 							};
-							console.log(arr)
+							// console.log(arr)
 							const result = await api.addTrafficInfo(arr);
-							console.log(result);
+							// console.log(result);
 							uni.showToast({
 							    title: '提交成功',
 							    duration: 2000,

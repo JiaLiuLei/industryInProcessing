@@ -89,7 +89,7 @@
 						size: this.size,
 						policeNo: userinfo.unique
 					});
-					console.log(result);
+					// console.log(result);
 					this.currentPage = this.currentPage + 1;
 					this.total = result.total;
 					this.list = result.records;
