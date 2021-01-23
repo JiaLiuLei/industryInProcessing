@@ -16,6 +16,7 @@
 				<LeisureStatus :sourceData="pageData" v-else></LeisureStatus>
 			</div>
 		</div>
+		<navigator url="/pages/traffic-info/index" hover-class="navigator-hover" class="information-up"><text class="information-text">信息上报</text></navigator>
 	</div>
 </template>
 
@@ -92,8 +93,8 @@
 			//用户信息
 			const userinfo = uni.getStorageSync('userinfo');
 			this.userinfo = userinfo;
-			this.$store.commit('setUserInfo', userinfo)
-			console.log(this.$store.state.userinfo)
+			// this.$store.commit('setUserInfo', userinfo)
+			// console.log(this.$store.state.userinfo)
 
 			//个推绑定别名
 			var tool = new igexinTool();
@@ -188,5 +189,17 @@
 		border-radius: 8rpx;
 		color: #fff;
 		background-color: #0055FE;
+	}
+	.information-up{
+		position: absolute;
+		top: 70rpx;
+		right: 20rpx;
+		background-color: #0055FE;
+		padding: 10rpx 16rpx;
+		border-radius: 8rpx;
+	}
+	.information-text{
+		font-size: 24rpx;
+		color: #fff;
 	}
 </style>

@@ -4,10 +4,10 @@
 			<u-image width="448rpx" height="314rpx" :src="require('@/static/logo.png')" mode="aspectFit"></u-image>
 			<u-form :model="form" ref="uForm" class="form" :error-type="['toast']">
 				<u-form-item label-width="140" label="手机号码" prop="mobile">
-					<u-input maxlength="11" v-model="form.mobile" placeholder="请输入手机号" />
+					<u-input maxlength="11" type="number" v-model="form.mobile" placeholder="请输入手机号" />
 				</u-form-item>
 				<u-form-item label-width="140" label="验证码" prop="code">
-					<u-input v-model="form.code" placeholder="请输入验证码" />
+					<u-input maxlength="6" type="number" v-model="form.code" placeholder="请输入验证码" />
 					<template slot="right">
 						<u-verification-code start-text="获取验证码" :seconds="seconds" ref="uCode" @change="codeChange">
 						</u-verification-code>

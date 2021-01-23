@@ -57,6 +57,8 @@ const request = (url, options) => {
 			}
 
 		}
+	}).catch(() => {
+		uni.hideLoading();
 	})
 }
 

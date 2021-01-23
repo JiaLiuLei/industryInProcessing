@@ -39,8 +39,54 @@
 			"style": {
 				"navigationBarTitleText": "警情详情"
 			}
+		},
+		{
+			"path": "pages/traffic-info/index",
+			"style": {
+				"navigationBarTitleText": "交通安全信息列表",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "添加",
+								 "color": "#0055FE",
+								 "colorPressed": "#eee",
+								 "float": "right",
+								 "fontSize": "16px",
+								 "width": "80px"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+            "path" : "pages/traffic-detail/index",
+			"style": {
+				"navigationBarTitleText": "交通安全信息上报",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "删除",
+								 "color": "#e02433",
+								 "colorPressed": "#eee",
+								 "float": "right",
+								 "fontSize": "16px",
+								 "width": "80px"
+							}
+						]
+					}
+				}
+			}
+        },
+		{
+			"path": "pages/traffic-add/index",
+			"style": {
+				"navigationBarTitleText": "交通安全信息上报"
+			}
 		}
-	],
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
