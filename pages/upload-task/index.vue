@@ -98,18 +98,18 @@
 			this.typeValue = this.typeOptions[0];
 			uni.getLocation({
 				geocode: true,
-				success: res => {
+				success: res => {console.log(res)
 					const { latitude, longitude } = res;
-					this.address = { longitude, latitude, name: "当前位置" }
+					this.address = { longitude, latitude, name: "当前位置", address: res.address.city + res.address.district + res.address.street + res.address.poiName }
 				}
 			})
 		},
 		methods:{
 			handleChosenPosition(){
 				uni.chooseLocation({
-					success: (res) => {
-						const { longitude, latitude, name } = res;
-						this.address = { longitude, latitude, name: name === "地图位置" ? "当前位置" : name };
+					success: (res) => {console.log(res)
+						const { longitude, latitude, name, address } = res;
+						this.address = { longitude, latitude, name: address, address };
 					}
 				})
 			},
@@ -125,7 +125,7 @@
 				this.fileList.splice(index, 1);
 			},
 			async handleUpload(){
-				const { longitude, latitude, name } = this.address;
+				const { longitude, latitude, name, address } = this.address;
 				if (!this.describe) {
 					this.$u.toast('请填写详细的描述');
 					return
@@ -137,7 +137,7 @@
 				try{
 					await api.uploadTask({
 						alarmClass: this.typeValue.value,
-						caseAddr: name,
+						caseAddr: address,
 						content: this.describe,
 						lat: latitude,
 						lng: longitude,
