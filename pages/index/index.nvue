@@ -93,6 +93,7 @@
 			//用户信息
 			const userinfo = uni.getStorageSync('userinfo');
 			this.userinfo = userinfo;
+			console.log(userinfo)
 			// this.$store.commit('setUserInfo', userinfo)
 			// console.log(this.$store.state.userinfo)
 

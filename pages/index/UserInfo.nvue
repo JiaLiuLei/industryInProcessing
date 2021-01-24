@@ -1,7 +1,9 @@
 <template>
 	<div class="container">
-		<image class="icon" src="/static/icon-via-default.png"></image>
-		<text class="name">{{username}}</text>
+		<navigator class="user-exit" url="/pages/exit/index" open-type="navigate">
+			<image class="icon" src="/static/icon-via-default.png"></image>
+			<text class="name">{{username}}</text>
+		</navigator>
 		<text class="tip">{{hoursTip}}，欢迎使用交巡警智能管理平台</text>
 	</div>
 </template>
@@ -54,5 +56,10 @@
 		text-align: right;
 		font-size: 24rpx;
 		color: #BDC1CC;
+	}
+	.user-exit{
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

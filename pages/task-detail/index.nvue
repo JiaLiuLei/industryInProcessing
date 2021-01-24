@@ -27,7 +27,7 @@
 				<view class="title"><text class="title-text">回执说明内容</text></view>
 				<textarea v-model="receiptContent" :maxlength="-1" class="textarea" placeholder-style="color:#BDC1CC" placeholder="添加更加详细的回执说明" />
 				<view class="upload">
-					<view class="imglist" v-for="(val, idx) in imgFile" :style="{marginRight: ((idx + 1) % 3 == 0 ? '0rpx' : '20rpx')}"><image :src="val" mode="aspectFill" class="picImg" @click="previewImg(idx)"></image><image src="../../static/delete-pic.png" mode="aspectFit" class="delete-pic" @click="deleteImg(idx)"></image></view>
+					<view class="imglist" v-for="(val, idx) in fileList" :style="{marginRight: ((idx + 1) % 3 == 0 ? '0rpx' : '20rpx')}"><image :src="val" mode="aspectFill" class="picImg" @click="previewImg(idx)"></image><image src="../../static/delete-pic.png" mode="aspectFit" class="delete-pic" @click="deleteImg(idx)"></image></view>
 					<view class="choose-img" @click="chooseImage1"><text class="add-icon">+</text></view>
 				</view>
 			</view>
@@ -55,6 +55,7 @@
 		data() {
 			return {
 				appkey: config.APP_KEY,
+				base_url: config.BASE_URL,
 				activeIndex: 3,
 				pageData: {},
 				finished: true,
@@ -62,7 +63,8 @@
 				receiptContent: "",
 				uploadAction: `${config.BASE_URL}/file/upload`,
 				fileList: [],
-				imgFile: []
+				imgFile: [],
+				noneHostFile: []
 			}
 		},
 		computed: {
@@ -135,7 +137,7 @@
 					const result = await api.uploadReceipt({
 						jqId: this.pageData.id,
 						feedbackContent: this.receiptContent,
-						feedbackUrls: this.fileList
+						feedbackUrls: this.noneHostFile.toString()
 					});
 					uni.hideLoading()
 					this.handleLaterProcessing();
@@ -146,7 +148,13 @@
 					const result = await api.getTaskDetail({
 						jqId: id
 					});
-					this.pageData = result;
+					this.pageData = result;console.log(result)
+					this.receiptContent = result.feedbackContent;
+					if(result.feedbackUrl.length > 0){
+						this.fileList = result.feedbackUrl.split(',').map((item) => {return this.base_url + item});
+						this.imgFile = result.feedbackUrl.split(',').map((item) => {return this.base_url + item});
+						this.noneHostFile = result.feedbackUrl.split(',');
+					}
 					this.changeNavIndex(result.status);
 				} catch {}
 
@@ -244,7 +252,8 @@
 										// console.log(uploadFileRes.data);
 										let res = JSON.parse(uploadFileRes.data);
 										if(res.code == 200){
-											this.fileList.push(res.data.attachPath);
+											this.fileList.push(this.base_url + res.data.attachPath);
+											this.noneHostFile.push(res.data.attachPath);
 										} else{
 											uni.showToast({
 											    title: '图片上传失败',
@@ -265,7 +274,7 @@
 				// 预览图片
 				uni.previewImage({
 					current: current,
-					urls: this.imgFile,
+					urls: this.fileList,
 					longPressActions: {
 						itemList: ['发送给朋友', '保存图片', '收藏'],
 						success: function(data) {
@@ -281,6 +290,7 @@
 				//删除图片
 				this.imgFile = this.imgFile.filter((item, index) => index !== idx);
 				this.fileList = this.fileList.filter((item, index) => index !== idx);
+				this.noneHostFile = this.noneHostFile.filter((item, index) => index !== idx);
 			}
 		}
 	}

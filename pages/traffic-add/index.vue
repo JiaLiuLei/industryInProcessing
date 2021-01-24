@@ -121,7 +121,7 @@
 								road: this.road,
 								addr: this.addr,
 								description: this.description,
-								picture: this.fileList,
+								picture: this.fileList.toString(),
 								lng: longitude,
 								lat: latitude
 							};

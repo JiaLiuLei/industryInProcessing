@@ -85,6 +85,12 @@
 			"style": {
 				"navigationBarTitleText": "交通安全信息上报"
 			}
+		},
+		{
+			"path": "pages/exit/index",
+			"style": {
+				"navigationBarTitleText": "帐号管理"
+			}
 		}
     ],
 	"globalStyle": {

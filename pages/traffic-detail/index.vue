@@ -186,10 +186,11 @@
 								road: this.road,
 								addr: this.addr,
 								description: this.description,
-								picture: this.noneHostFile,
+								picture: this.noneHostFile.toString(),
 								lng: longitude,
 								lat: latitude,
-								id: this.id
+								id: this.id,
+								status: this.status
 							};
 							console.log(arr)
 							const result = await api.updateTrafficInfo(arr);
