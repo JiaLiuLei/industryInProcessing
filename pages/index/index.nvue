@@ -16,7 +16,7 @@
 				<LeisureStatus :sourceData="pageData" v-else></LeisureStatus>
 			</div>
 		</div>
-		<navigator url="/pages/traffic-info/index" hover-class="navigator-hover" class="information-up"><text class="information-text">信息上报</text></navigator>
+		<!-- <navigator url="/pages/traffic-info/index" hover-class="navigator-hover" class="information-up"><text class="information-text">信息上报</text></navigator> -->
 	</div>
 </template>
 
@@ -32,6 +32,9 @@
 	import {
 		getTask
 	} from "@/api/task";
+	import {
+		loginHistory
+	} from "@/api/user";
 	import igexinTool from "@/util/igexinTool";
 	import {
 		mapState
@@ -89,11 +92,33 @@
 				return result;
 			}
 		},
-		onReady() {
+		watch: {
+			broadcast(message) {
+				this.broadcastList.push(message);
+				clearInterval(this.broadcastTimer);
+				this.broadcastTimer = setTimeout(() => {
+					if (this.broadcastList.length) {
+						this.broadcastList = this.broadcastList.filter(({
+							alarmSituationId
+						}) => message.alarmSituationId !== alarmSituationId);
+						uni.navigateTo({
+							url: `/pages/task-detail/index?id=${message.alarmSituationId}`
+						})
+					} else {
+						clearInterval(this.broadcastTimer);
+					}
+				}, 5000);
+			}
+		},
+		async onReady() {
 			//用户信息
 			const userinfo = uni.getStorageSync('userinfo');
+			const token = uni.getStorageSync('token');
 			this.userinfo = userinfo;
 			console.log(userinfo)
+			if(!!token){
+				await loginHistory();
+			}
 			// this.$store.commit('setUserInfo', userinfo)
 			// console.log(this.$store.state.userinfo)
 
@@ -115,33 +140,20 @@
 			},
 			// 获取任务列表
 			async getTaskList() {
-				const result = await getTask({
-					status: 2
-				});
-				this.taskListTotal = result.total;
+				try{
+					const result = await getTask({
+						status: 2
+					});
+					// console.log(result)
+					this.taskListTotal = result.total;
+				} catch(error){
+					console.log(error)
+				}
 			},
 			// 右滑完成任务回调
 			handlePerform() {
 				this.getPageData();
 				this.getTaskList();
-			}
-		},
-		watch: {
-			broadcast(message) {
-				this.broadcastList.push(message);
-				clearInterval(this.broadcastTimer);
-				this.broadcastTimer = setTimeout(() => {
-					if (this.broadcastList.length) {
-						this.broadcastList = this.broadcastList.filter(({
-							alarmSituationId
-						}) => message.alarmSituationId !== alarmSituationId);
-						uni.navigateTo({
-							url: `/pages/task-detail/index?id=${message.alarmSituationId}`
-						})
-					} else {
-						clearInterval(this.broadcastTimer);
-					}
-				}, 5000);
 			}
 		}
 	}

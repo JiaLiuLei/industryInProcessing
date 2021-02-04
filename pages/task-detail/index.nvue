@@ -95,12 +95,14 @@
 				return { longitude:lng, latitude:lat };
 			}
 		},
-		onLoad(params) {
+		async onLoad(params) {
 			this.id = params.id;
 			this.getPageData(params.id);
 			// setTimeout(() => {
 			// 	this.handleSliderEnd(2);
 			// }, 5000);
+		},
+		onShow(){
 		},
 		methods: {
 			handleImageUploadSuccess(data) {
@@ -148,15 +150,20 @@
 					const result = await api.getTaskDetail({
 						jqId: id
 					});
-					this.pageData = result;console.log(result)
-					this.receiptContent = result.feedbackContent;
-					if(result.feedbackUrl.length > 0){
+					this.pageData = result;
+					// console.log(result);
+					if(!!result.feedbackContent){
+						this.receiptContent = result.feedbackContent;
+					}
+					if(!!result.feedbackUrl && result.feedbackUrl.length > 0){
 						this.fileList = result.feedbackUrl.split(',').map((item) => {return this.base_url + item});
 						this.imgFile = result.feedbackUrl.split(',').map((item) => {return this.base_url + item});
 						this.noneHostFile = result.feedbackUrl.split(',');
 					}
 					this.changeNavIndex(result.status);
-				} catch {}
+				} catch(res) {
+					// console.log(res)
+				}
 
 			},
 			// 右滑完成当前警情

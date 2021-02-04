@@ -17,6 +17,9 @@ const store = new Vuex.Store({
 		}
     },
 	actions:{
+		userinfo({commit}, res){
+			commit('setUserInfo', res);
+		},
 		broadcastMessage({commit}, payload){
 			commit('setBroadcast', payload);
 		}

@@ -49,13 +49,16 @@ const request = (url, options) => {
 					url: '/pages/login/index'
 				});
 			default:{
-				uni.showToast({
-				    title: res.data.message,
-					icon: "none",
-				    duration: 2000
-				});
-				// console.log("报错信息：" + JSON.stringify(res.data));
+				if(res.data.message != '没有待处理警情'){
+					uni.showToast({
+					    title: res.data.message,
+						icon: "none",
+					    duration: 2000
+					});
+				}
+				console.log("报错信息：" + JSON.stringify(res.data));
 				return Promise.resolve(res.data);
+				// return Promise.reject(res);
 			}
 
 		}

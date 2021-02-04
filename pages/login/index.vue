@@ -74,34 +74,37 @@
 								phone: mobile,
 								code
 							});
+							var result2 = {
+								"action": null,
+								"admin": {
+									"id": "1304258162437767169",
+									"name": "管理员"
+								},
+								"avatar": "",
+								"createtime": "1612447743",
+								"extend": null,
+								"friends": [],
+								"groups": [],
+								"id": "1346430184940666882",
+								"isdelete": 0,
+								"jwtKey": "{\"source\":\"jb.jxj.jwt\",\"name\":\"梁代玉\"}",
+								"name": "梁代玉",
+								"nick": "梁代玉",
+								"online": 0,
+								"sign": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzQ2NDMwMTg0OTQwNjY2ODgyIiwiZXhwIjoxNjEyNTM0MTQzLCJ1c2VySWQiOjEzNDY0MzAxODQ5NDA2NjY4ODIsImlhdCI6MTYxMjQ0Nzc0MywiYWNjb3VudCI6IjMwMjIzNCIsInVzZXJLZXkiOiJqYi5qeGouand0In0.Pt55OUnOL0AYkqEijzMl7H5jq9AtfjvjS1UaY_TkteYdwKfDKiQNqCMJZhxe1WTvcUnlqBaW0ljS6pJfq57KPw",
+								"source": "jb.jxj.jwt",
+								"terminal": "",
+								"unique": "302234",
+								"userId": "1346430184940666882"
+							}
 							uni.setStorage({
 								key: 'token',
 								data: result.sign,
 								success(res) {
-									var testRes = {
-										"action": null,
-										"admin": {
-											"id": "1304258162437767169",
-											"name": "管理员"
-										},
-										"avatar": "",
-										"createtime": "1610942467",
-										"friends": [],
-										"groups": [],
-										"id": "1346430184940666882",
-										"isdelete": 0,
-										"jwtKey": "{\"source\":\"jb.jxj.jwt\",\"name\":\"梁代玉\"}",
-										"name": "梁代玉",
-										"nick": "梁代玉",
-										"online": 0,
-										"sign": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzQ2NDMwMTg0OTQwNjY2ODgyIiwiZXhwIjoxNjExMDI4ODY3LCJ1c2VySWQiOjEzNDY0MzAxODQ5NDA2NjY4ODIsImlhdCI6MTYxMDk0MjQ2NywiYWNjb3VudCI6IjMwMjIzNCIsInVzZXJLZXkiOiJqYi5qeGouand0In0.QvWsSPpY0AMzY5lveuzCKM8vQoiyNEp7ePRyCahT0jO7bvuWOb09MUasfEAJw2tjRKyE-2vu43grINYvwPReeg",
-										"source": "jb.jxj.jwt",
-										"terminal": "",
-										"unique": "302234",
-										"userId": "1346430184940666882"
-									}
+									
 									//存用户登录信息
-									console.log(result.unique);
+									console.log(result);
+									// console.log('警号：' + result.unique);
 									uni.setStorage({
 										key: 'userinfo',
 										data: result,
@@ -113,7 +116,7 @@
 									});
 									//个推绑定别名
 									var tool = new igexinTool();
-									tool.bindAlias(userinfo.unique);
+									tool.bindAlias(result.unique);
 									tool.turnOnPush();
 								}
 							});

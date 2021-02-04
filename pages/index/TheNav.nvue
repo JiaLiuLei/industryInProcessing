@@ -10,7 +10,8 @@
 		<div class="gap"></div>
 		<div class="item" @click="handleToUploadTask">
 			<image class="icon" src="../../static/icon-message.png"></image>
-			<text class="text">警情上报</text>
+			<!-- <text class="text">警情上报</text> -->
+			<text class="text">信息上报</text>
 		</div>
 	</div>
 </template>
@@ -27,8 +28,11 @@
 				})
 			},
 			handleToUploadTask() {
+				// uni.navigateTo({
+				// 	url: "/pages/upload-task/index"
+				// })
 				uni.navigateTo({
-					url: "/pages/upload-task/index"
+					url: "/pages/traffic-info/index"
 				})
 			}
 		}
