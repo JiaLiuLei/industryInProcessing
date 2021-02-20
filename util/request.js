@@ -1,26 +1,41 @@
 import config from "@/config"
 
-const request = (url, options) => {
+const request = async (url, options = {}) => {
+	// 获取登录token
 	const token = uni.getStorageSync('token');
-	let header = { appkey: config.APP_KEY, token};
-	if (options && options.header) {
-		header = {...options.header, ...header};
-		delete options.header;
+	
+	// 合并选项
+	if (options.header) {
+		options.header = { ...options.header,  appkey: config.APP_KEY, token};
+	} else {
+		options.header = { appkey: config.APP_KEY, token };
 	}
+	
 	uni.showLoading({
 	    title: '加载中'
 	});
-	// console.log("请求接口：" + `${config.BASE_URL}${url}`)
-	return uni.request({
-		header,
-		url: `${config.BASE_URL}${url}`,
-		...options
-	}).then(response => {
+	
+	try{
+		const [error, res] = await uni.request({
+			url: `${config.BASE_URL}${url}`,
+			...options
+		});
+		
 		uni.hideLoading();
-	
-		const [error, res]  = response;
-		const { code, data } = res.data;
-	
+		
+		if (error) {
+			const { errMsg } = error;
+			// console.log(errMsg)
+			uni.showToast({
+				title: errMsg,
+				icon: "none",
+				duration: 2000
+			});
+			return Promise.reject(error);
+		}
+		
+		const { code, data, message } = res.data;
+		
 		switch(code){
 			case 200:
 				return Promise.resolve(data);
@@ -49,22 +64,24 @@ const request = (url, options) => {
 					url: '/pages/login/index'
 				});
 			default:{
-				if(res.data.message != '没有待处理警情'){
-					uni.showToast({
-					    title: res.data.message,
-						icon: "none",
-					    duration: 2000
-					});
-				}
-				console.log("报错信息：" + JSON.stringify(res.data));
-				return Promise.resolve(res.data);
-				// return Promise.reject(res);
+				uni.showToast({
+					title: message,
+					icon: "none",
+					duration: 2000
+				});
+				return Promise.reject(res);
 			}
-
+	
 		}
-	}).catch(() => {
-		uni.hideLoading();
-	})
+		
+	} catch(err) {
+		uni.showToast({
+			title: "发生未知问题，请稍后重试",
+			icon: "none",
+			duration: 2000
+		});
+		return Promise.reject(err);
+	}
 }
 
 export default request;

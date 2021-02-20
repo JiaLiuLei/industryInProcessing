@@ -127,7 +127,7 @@
 			codeChange(text) {
 				this.tips = text;
 			},
-			async getCode() {
+			getCode() {
 				const {
 					mobile
 				} = this.form;
@@ -140,23 +140,12 @@
 					return;
 				}
 				if (this.$refs.uCode.canGetCode) {
-					uni.showLoading({
-						title: '正在获取验证码'
-					})
-					try {
-						const code = await api.getCode({
-							phone: mobile
-						});
-						uni.hideLoading();
+					api.getCode({
+						phone: mobile
+					}).then(result => {
 						this.$u.toast('验证码已发送');
 						this.$refs.uCode.start();
-					} catch (error) {
-						const {
-							message
-						} = error;
-						uni.hideLoading();
-						this.$u.toast(message);
-					}
+					})
 				} else {
 					this.$u.toast('倒计时结束后再发送');
 				}
