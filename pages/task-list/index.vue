@@ -73,17 +73,33 @@
 </template>
 
 <script>
-	import { getTask } from "@/api/task";
-	
+	import {
+		getTask
+	} from "@/api/task";
+
 	export default {
 		data() {
 			return {
-				unconfirmedTask: {total: 0, list: [], currentPage: 1, status: 2},
-				inProgressTask: {total: 0, list: [], currentPage: 1, status: 3},
-				completedTask: {total: 0, list: [], currentPage: 1, status: 0},
+				unconfirmedTask: {
+					total: 0,
+					list: [],
+					currentPage: 1,
+					status: 2
+				},
+				inProgressTask: {
+					total: 0,
+					list: [],
+					currentPage: 1,
+					status: 3
+				},
+				completedTask: {
+					total: 0,
+					list: [],
+					currentPage: 1,
+					status: 0
+				},
 				listKeys: ["unconfirmedTask", "inProgressTask", "completedTask"],
-				category: [
-					{
+				category: [{
 						name: "待处理"
 					},
 					{
@@ -98,54 +114,76 @@
 				loading: false
 			}
 		},
-		onShow(){
-			const data = this[this.listKeys[this.currentTabIndex]];
-			this[this.listKeys[this.currentTabIndex]] = {
-				...data,
-				total: 0,
-				currentPage: 1,
-				list: []
-			}
-			this.getTaskList();
+		onShow() {
+			this.refresh();
 		},
-		onReachBottom(){
+		onReachBottom() {
 			if (this.loading) {
 				this.loading = false;
 				this.getTaskList();
 			}
 		},
+		// 下拉刷新
+		onPullDownRefresh() {
+			this.refresh().then(() => {
+				uni.stopPullDownRefresh();
+			});
+		},
 		methods: {
-			handleNavigateToDetail(id){
+			async refresh() {
+				const data = this[this.listKeys[this.currentTabIndex]];
+				this[this.listKeys[this.currentTabIndex]] = {
+					...data,
+					total: 0,
+					currentPage: 1,
+					list: []
+				}
+				await this.getTaskList();
+			},
+			handleNavigateToDetail(id) {
 				uni.navigateTo({
 					url: `/pages/task-detail/index?id=${id}`
 				})
 			},
 			handleNavChange(index) {
 				this.currentTabIndex = index;
-				const { total } = this[this.listKeys[this.currentTabIndex]];
+				const {
+					total
+				} = this[this.listKeys[this.currentTabIndex]];
 				if (!total) {
 					this.getTaskList();
 				}
 			},
 			async getTaskList(index) {
 				const data = this[this.listKeys[this.currentTabIndex]];
-				const { total, list, currentPage, status } = data;
-				
+				const {
+					total,
+					list,
+					currentPage,
+					status
+				} = data;
+
 				if (total && list.length >= total) {
 					return;
 				}
-				const result = await getTask({status, current: currentPage, size: this.size});
-				this[this.listKeys[this.currentTabIndex]] = {
-					...data,
-					total: result.total,
-					list: [...list, ...result.records],
-					currentPage: currentPage + 1
-				};
+				try {
+					const result = await getTask({
+						status,
+						current: currentPage,
+						size: this.size
+					});
+					this[this.listKeys[this.currentTabIndex]] = {
+						...data,
+						total: result.total,
+						list: [...list, ...result.records],
+						currentPage: currentPage + 1
+					};
+				} catch {}
 				this.loading = true;
 			},
-			handlePhoneCall(number){
+			handlePhoneCall(number) {
 				uni.makePhoneCall({
-				    phoneNumber: number
+					phoneNumber: number
 				});
 			}
 		}
@@ -153,45 +191,54 @@
 </script>
 
 <style lang="scss" scoped>
-	.contentList{
+	.contentList {
 		padding-bottom: 50rpx;
 	}
-	.nav{
+
+	.nav {
 		padding: 20rpx 180rpx;
 		background-color: #fff;
 	}
-	.item{
+
+	.item {
 		padding: 0 50rpx;
 	}
-	.card{
+
+	.card {
 		margin-top: 30rpx;
 		padding: 20rpx;
 		border-radius: 16rpx;
 		background-color: #fff;
-		.title{
+
+		.title {
 			display: flex;
 			justify-content: space-between;
 			font-size: 28rpx;
-			.user{
+
+			.user {
 				display: flex;
 				align-items: center;
 				color: #424758;
-				.via{
+
+				.via {
 					margin-right: 10rpx;
 				}
-				
+
 			}
-			.relation{
+
+			.relation {
 				display: flex;
 				align-items: center;
 				color: #424758;
 			}
 		}
-		.content{
+
+		.content {
 			margin-top: 20rpx;
 			padding: 20rpx;
 			background: #F2F2F2;
 			border-radius: 8rpx;
+
 			.text {
 				display: -webkit-box;
 				-webkit-box-orient: vertical;
@@ -199,7 +246,8 @@
 				overflow: hidden;
 			}
 		}
-		.action{
+
+		.action {
 			margin-top: 20rpx;
 			padding: 28rpx;
 			text-align: center;
@@ -211,7 +259,8 @@
 			font-weight: 500;
 		}
 	}
-	.arrow{
+
+	.arrow {
 		display: block;
 		width: 44rpx;
 		height: 44rpx;
@@ -221,6 +270,6 @@
 </style>
 <style>
 	page {
-	  background-color: #FAFAFA;
+		background-color: #FAFAFA;
 	}
 </style>

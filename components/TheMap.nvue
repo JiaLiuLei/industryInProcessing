@@ -140,6 +140,7 @@
 								longitude,
 								latitude
 							});
+							this.markers = [];
 						}
 					}
 				})

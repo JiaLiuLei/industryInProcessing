@@ -100,7 +100,11 @@
 					jqId: id,
 					status: 0
 				});
-				this.$emit("perform");
+				// 跳转到详情页
+				uni.navigateTo({
+					url: `/pages/task-detail/index?id=${id}`
+				})
+				// this.$emit("perform");
 			}
 		}
 	}

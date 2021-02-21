@@ -31,7 +31,8 @@
 		{
 			"path": "pages/task-list/index",
 			"style": {
-				"navigationBarTitleText": "警情任务"
+				"navigationBarTitleText": "警情任务",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

@@ -12,7 +12,7 @@
 			<TheNav :total="taskListTotal"></TheNav>
 			<div class="detail">
 				<UserInfo :username="userinfo.nick"></UserInfo>
-				<BusyStatus :sourceData="pageData" @perform="handlePerform" v-if="alarm.status === 3"></BusyStatus>
+				<BusyStatus :sourceData="pageData" v-if="alarm.status === 3"></BusyStatus>
 				<LeisureStatus :sourceData="pageData" v-else></LeisureStatus>
 			</div>
 		</div>
@@ -115,7 +115,7 @@
 			const userinfo = uni.getStorageSync('userinfo');
 			const token = uni.getStorageSync('token');
 			this.userinfo = userinfo;
-			console.log(userinfo)
+			// console.log(userinfo)
 			if(!!token){
 				await loginHistory();
 			}
@@ -134,27 +134,24 @@
 		},
 		methods: {
 			// 获取首页数据
-			async getPageData() {
-				const result = await getHomeInfo();
-				this.pageData = result;
+			getPageData() {
+				getHomeInfo().then(result => {
+					this.pageData = result;
+				})
 			},
 			// 获取任务列表
-			async getTaskList() {
-				try{
-					const result = await getTask({
-						status: 2
-					});
-					// console.log(result)
+			getTaskList() {
+				getTask({
+					status: 2
+				}).then(result => {
 					this.taskListTotal = result.total;
-				} catch(error){
-					console.log(error)
-				}
+				})
 			},
 			// 右滑完成任务回调
-			handlePerform() {
-				this.getPageData();
-				this.getTaskList();
-			}
+			// handlePerform() {
+			// 	this.getPageData();
+			// 	this.getTaskList();
+			// }
 		}
 	}
 </script>
