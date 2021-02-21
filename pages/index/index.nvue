@@ -95,6 +95,7 @@
 		watch: {
 			broadcast(message) {
 				this.broadcastList.push(message);
+				this.getTaskList();
 				clearInterval(this.broadcastTimer);
 				this.broadcastTimer = setTimeout(() => {
 					if (this.broadcastList.length) {

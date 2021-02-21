@@ -172,6 +172,7 @@
 						current: currentPage,
 						size: this.size
 					});
+					console.log(result)
 					this[this.listKeys[this.currentTabIndex]] = {
 						...data,
 						total: result.total,
@@ -199,7 +200,6 @@
 		padding: 20rpx 180rpx;
 		background-color: #fff;
 	}
-
 	.item {
 		padding: 0 50rpx;
 	}
