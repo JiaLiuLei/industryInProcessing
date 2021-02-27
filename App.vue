@@ -94,7 +94,7 @@
 				_self.updatePushMessage(message);
 			};
 			plus.push.addEventListener('click', function(message) {
-				plus.nativeUI.toast('push click');
+				// plus.nativeUI.toast('push click');
 				const { payload } = message;
 				const reuslt = JSON.parse(payload.data);
 				uni.navigateTo({
@@ -103,7 +103,7 @@
 				_handlePush(message);
 			});
 			plus.push.addEventListener('receive', function(message) {
-				plus.nativeUI.toast('push receive');
+				// plus.nativeUI.toast('push receive');
 				
 				const { payload } = message;
 				const reuslt = JSON.parse(payload.data);
